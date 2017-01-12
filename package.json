@@ -34,8 +34,8 @@
     "ci:testall": "npm run e2e:testall && npm run test:once:ci",
     "tslint": "tslint",
     "lint": "npm run tslint \"src/app/**/*.ts\" ",
-    "clean": "npm cache clean && npm run clean:compile && npm run rimraf -- node_modules doc typings coverage dist .awcache dll",
-    "clean:dist": "npm run rimraf -- dist .awcache",
+    "clean": "npm cache clean && npm run clean:compile && npm run rimraf -- node_modules doc typings coverage www .awcache dll",
+    "clean:dist": "npm run rimraf -- www .awcache",
     "clean:dll": "npm run rimraf -- dll",
     "clean:compile": "npm run rimraf -- \"compiled\" ",
     "compile": "npm run compile:aot",
@@ -54,6 +54,8 @@
     "server:prod": "npm-run-all -p -r watch:prod prodserver",
     "server:prod80": "npm-run-all -p -r serve80 watch:prod",
     "debug:build": "node-nightly --inspect --debug-brk node_modules/webpack/bin/webpack.js",
+    "cordova": "cordova",
+    "deploy": "cordova android",
     "build": "npm run build:prod",
     "build:aot": "npm run build:aot:prod",
     "build:aot:prod": "npm run clean:dist && npm run sass && webpack",
@@ -101,6 +103,7 @@
     "compression": "1.6.2",
     "compression-webpack-plugin": "~0.3.1",
     "copy-webpack-plugin": "~4.0.0",
+    "cordova": "^6.4.0",
     "css-loader": "~0.26.0",
     "es6-promise": "~4.0.5",
     "es6-promise-loader": "~1.0.2",
@@ -119,8 +122,8 @@
     "karma-remap-coverage": "0.1.4",
     "karma-sourcemap-loader": "~0.3.7",
     "karma-webpack": "~1.8.0",
-    "npm-run-all": "~4.0.0",
     "node-sass": "~4.2.0",
+    "npm-run-all": "~4.0.0",
     "phantomjs-polyfill": "~0.0.2",
     "phantomjs-prebuilt": "~2.1.13",
     "protractor": "~4.0.8",
@@ -140,9 +143,16 @@
     "webpack-dev-server": "2.2.0-rc.0",
     "webpack-md5-hash": "^0.0.5"
   },
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/qdouble/angular-webpack2-starter/issues"
-  },
-  "homepage": "https://github.com/qdouble/angular-webpack2-starter#readme"
+  "cordovaPlugins": [
+    "cordova-plugin-device",
+    "cordova-plugin-console",
+    "cordova-plugin-whitelist",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-statusbar",
+    "ionic-plugin-keyboard",
+    "de.appplant.cordova.plugin.local-notification",
+    "cordova-plugin-geolocation",
+    "cordova-plugin-facebook4"
+  ],
+  "cordovaPlatforms": []
 }

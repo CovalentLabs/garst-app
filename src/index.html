@@ -4,20 +4,39 @@
 	<title>Angular 2 App</title>
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta charset='utf-8'>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!--
+  Customize this policy to fit your own app's needs. For more guidance, see:
+      https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+  Some notes:
+      * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+      * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+      * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+          * Enable inline JS: add 'unsafe-inline' to default-src
+  -->
+  <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">-->
+  <meta name="format-detection" content="telephone=no">
+  <!--Remove tap highlight on Windows Phone-->
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
 	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-	<base href="/">
+	<!--<base href="/">-->
 	<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" />-->
-	<link rel="stylesheet" href="styles.css" />
-	<link rel="stylesheet" href="main.css" />
-	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<!--<link rel="stylesheet" href="styles.css" />
+	<link rel="stylesheet" href="main.css" />-->
+	<!--<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">-->
   <style>#str-dlls { display: none }</style>
 </head>
 <body>
 	<my-app>
-		Loading...
+    <div style="text-align: center; font-family: sans-serif">
+      <img style="max-width: 60vw; margin-top: 20vh;" src="img/garst-app-icon.svg" alt="Loading Image Brand Garst App">
+    </div>
 	</my-app>
 	<script type="text/javascript" src="hammer.min.js"></script>
+  <link rel="stylesheet" href="font/iconfont/material-icons.css">
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="cordova_plugins.js"></script>
 	<!--<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=console.*,Intl.~locale.en&gated=1"></script>-->
 	<% if (htmlWebpackPlugin.options.metadata.isDevServer) { %>
   <div id="str-dlls">

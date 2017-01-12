@@ -5,6 +5,11 @@ Thumbs.db
 .idea
 .vscode
 
+# Cordova #
+/platforms
+/plugins
+/www/
+
 # Node Files #
 /node_modules
 /bower_components
@@ -16,7 +21,6 @@ npm-debug.log
 /tsd_typings/
 
 # Dist #
-/dist/
 /__build__/**
 .webpack.json
 /src/assets/bower_components/

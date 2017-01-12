@@ -9,9 +9,10 @@ interface WebpackConfig {
   plugins?: Array<any>;
   resolve?: {
     extensions?: Array<string>;
+    alias?: { [required: string]: string }
   };
   devServer?: {
-    contentBase?: string;
+    contentBase?: string | string[];
     port?: number;
     historyApiFallback?: {[key: string]: boolean} | boolean;
     hot?: boolean;

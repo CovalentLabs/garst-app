@@ -3,7 +3,6 @@ ehthumbs.db
 Icon?
 Thumbs.db
 .idea
-.vscode
 
 # Cordova #
 /platforms
@@ -23,7 +22,8 @@ npm-debug.log
 # Dist #
 /__build__/**
 .webpack.json
-/src/assets/bower_components/
+/src/public/assets/bower_components/
+/src/public/global.css
 
 # Coverage #
 /coverage/

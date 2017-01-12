@@ -79,17 +79,15 @@ const DLL_VENDORS = [
 ];
 
 const COPY_FOLDERS = [
-  { from: 'src/assets', to: 'assets' },
+  { from: 'src/public/', to: 'www' },
   // TODO Figure out if we can use/need jQuery global
   { from: 'node_modules/hammerjs/hammer.min.js' },
   { from: 'node_modules/hammerjs/hammer.min.js.map' },
-  // { from: 'src/app/main.css' }, // TODO figure out if this is global styles...
-  // { from: 'src/app/styles.css' },
   ...MY_COPY_FOLDERS
 ];
 
 if (!DEV_SERVER) {
-  COPY_FOLDERS.unshift({ from: 'src/index.html' });
+  // COPY_FOLDERS.unshift({ from: 'src/index.html' });
 } else {
   COPY_FOLDERS.push({ from: 'dll' });
 }
@@ -115,7 +113,7 @@ const clientConfig = function webpackConfig(): WebpackConfig {
         exclude: [/\.(spec|e2e|d)\.ts$/]
       },
       { test: /\.json$/, loader: 'json-loader' },
-      { test: /\.html/, loader: 'raw-loader', exclude: [root('src/index.html')] },
+      { test: /\.html/, loader: 'raw-loader', exclude: [root('src/public/index.html')] },
       { test: /\.css$/, loader: 'raw-loader' },
       ...MY_CLIENT_RULES
     ]
@@ -132,7 +130,7 @@ const clientConfig = function webpackConfig(): WebpackConfig {
     new NamedModulesPlugin(),
     new WebpackMd5Hash(),
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template: 'src/public/index.html',
       metadata: { isDevServer: DEV_SERVER }
     }),
     ...MY_CLIENT_PLUGINS
@@ -161,7 +159,7 @@ const clientConfig = function webpackConfig(): WebpackConfig {
   } else {
     config.plugins.push(
       new CopyWebpackPlugin(COPY_FOLDERS, { ignore: ['*dist_root/*'] }),
-      new CopyWebpackPlugin([{ from: 'src/assets/dist_root' }])
+      new CopyWebpackPlugin([{ from: 'src/public/assets/dist_root' }])
     );
   }
 
@@ -242,7 +240,8 @@ const clientConfig = function webpackConfig(): WebpackConfig {
   }
 
   config.devServer = {
-    contentBase: AOT ? './compiled' : './src',
+    // Use content base to include www
+    contentBase: [AOT ? './compiled' : './src/public'].concat(['./www']),
     port: CONSTANTS.PORT,
     historyApiFallback: {
       disableDotRule: true,
@@ -275,7 +274,11 @@ const clientConfig = function webpackConfig(): WebpackConfig {
   };
 
   config.resolve = {
-    extensions: ['.ts', '.js', '.json']
+    extensions: ['.ts', '.js', '.json'],
+    alias: {
+      "@app": root("src/@app"),
+      "@mock": root("src/@mock")
+    }
   };
 
   return config;

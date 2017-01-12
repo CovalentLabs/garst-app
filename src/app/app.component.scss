@@ -1,6 +1,12 @@
+@import 'color-map';
+
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:host {
+  background: color-map('red');
 }
 
 #my-navlist li {

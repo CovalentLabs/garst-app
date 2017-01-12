@@ -1,0 +1,12 @@
+<!-- ItemGroupComponent Template -->
+<div class="item-group-container">
+  <div class="avatar">
+    {{ profile.FirstName }}
+  </div>
+  <div class="items">
+    <pw-item *ngFor="let item of items"
+        [item]="item">
+    </pw-item>
+    <div class="display-date">{{ displayDate }}</div>
+  </div>
+</div>

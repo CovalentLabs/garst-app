@@ -1,0 +1,13 @@
+// DiscoveringComponent Styles
+
+@import 'bootstrap/custom';
+
+:host {
+  display: block;
+  padding: $spacer;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 18px;
+}

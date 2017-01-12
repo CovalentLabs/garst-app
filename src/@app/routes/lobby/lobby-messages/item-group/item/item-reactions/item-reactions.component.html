@@ -1,0 +1,15 @@
+<!-- ReactionComponent Template -->
+<div *ngIf="renderedItem && renderedItem.Reactions"
+    class="reaction-container" [class.show]="renderedItem.Reactions.length > 0">
+  <button class="reaction btn btn-default"
+      *ngFor="let reaction of renderedItem.Reactions"
+      (click)="onAddReaction(reaction.Reaction)">
+    <span>{{ reaction.Reaction }}</span>
+    <span class="counter" *ngIf="reaction.Items.length > 1">
+      {{ reaction.Items.length }}
+    </span>
+  </button>
+  <button class="reaction btn btn-default" (click)="onAddReaction()">
+    <span>+</span>
+  </button>
+</div>

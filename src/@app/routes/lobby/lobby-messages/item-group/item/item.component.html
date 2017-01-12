@@ -1,0 +1,43 @@
+<!-- ItemComponent Template -->
+
+<div [ngSwitch]="item.Type"
+    (press)="onPress($event)"
+    class="item-container touch-action-auto">
+  <!-- Group lock or unlocked change -->
+  <pw-item-lock-update [data]="item.Data"
+      class="small item"
+      *ngSwitchCase="LOCK_UPDATE">
+  </pw-item-lock-update>
+
+  <!-- User message -->
+  <pw-item-text [data]="item.Data"
+      class="message item"
+      *ngSwitchCase="TEXT">
+  </pw-item-text>
+
+  <!-- Changes shirt color or whatever -->
+  <div class="alert alert-warning"
+      class="small item"
+      *ngSwitchCase="USER_DATA_UPDATE">
+    USER_DATA_UPDATE: {{ item.Data | json }}
+  </div>
+
+  <!-- Pings that they have arrived -->
+  <div class="alert alert-warning"
+      class="small item"
+      *ngSwitchCase="USER_HAS_ARRIVED_UPDATE">
+    USER_HAS_ARRIVED_UPDATE: {{ item.Data | json }}
+  </div>
+
+  <!-- Pings that user has changed attention -->
+  <pw-item-user-status-update [data]="item.Data"
+      class="small item"
+      *ngSwitchCase="USER_STATUS_UPDATE">
+  </pw-item-user-status-update>
+
+  <div *ngSwitchDefault>
+    <h1 class="alert alert-danger">UNKNOWN</h1>
+  </div>
+</div>
+
+<pw-item-reactions [renderedItem]="item" (react)="onReact($event)"></pw-item-reactions>

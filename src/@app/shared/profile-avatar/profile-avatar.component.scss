@@ -1,0 +1,16 @@
+// ProfileAvatarComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+:host {
+  display: block;
+}
+
+div {
+  width: 100%;
+  padding-bottom: 100%;
+  background-size: cover;
+  background-position: center;
+}

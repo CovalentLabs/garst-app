@@ -1,0 +1,58 @@
+// InputTimeComponent Styles
+
+@import 'bootstrap/custom';
+
+// this is a broken value for anything landscape!
+$font-size: 21vw;
+
+:host {
+  display: block;
+  padding: 4px;
+}
+
+.flex-cont {
+  display: flex;
+}
+
+.time-a {
+  text-align: center;
+  font-size: $font-size / 2;
+
+  flex-grow: 1;
+
+  color: $gray-light;
+
+  position: relative;
+  input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  input:focus + span {
+    // outline: -webkit-focus-ring-color auto 5px;
+    outline: $ui-primary auto 5px;
+  }
+
+  // Style the checked radio button's following span
+  input:checked + span {
+    color: $ui-primary;
+  }
+}
+
+.input-cont {
+  font-size: $font-size;
+  color: $ui-primary;
+  > input {
+    padding: 0;
+    &:last-child {
+      padding-right: 40px;
+    }
+    flex-grow: 1;
+    // Minimum width is 2 characters
+    min-width: 2em;
+    text-align: right;
+    border: none;
+    background: transparent;
+    color: $ui-primary;
+  }
+}

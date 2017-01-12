@@ -1,0 +1,13 @@
+<!-- HomeComponent Template -->
+<!-- Container guards from trying to render a state which does not have data we need -->
+<ng-container *ngIf="AppState.Login.IsLoggedIn">
+
+<h2>Profile</h2>
+<div class="welcome-message">
+  Welcome {{ AppState.Login.Credentials.FirstName }}!
+</div>
+<button class="btn btn-primary" (click)="clickStartDiscover()">
+  Start Discover!
+</button>
+
+</ng-container>

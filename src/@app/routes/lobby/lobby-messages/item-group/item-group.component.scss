@@ -1,0 +1,57 @@
+// ItemGroupComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+:host {
+  display: block;
+}
+
+.item-group-container {
+  position: relative;
+
+  .items {
+    position: relative;
+  }
+
+  .avatar {
+    position: absolute;
+    width: 40px;
+    &::before {
+      display: inline-block;
+      content: "8^)";
+      border-radius: 20px;
+      width: 40px;
+      height: 40px;
+      line-height: 38px;
+      // Turn over :-) to correct orientation
+      transform: rotateZ(90deg);
+      color: limegreen;
+      background: midnightblue;
+    }
+    text-align: center;
+  }
+
+  &[data-position=left] {
+    padding-left: 10%;
+    padding-right: 20%;
+    .avatar  {
+      left: 0;
+    }
+  }
+
+  &[data-position=right] {
+    padding-right: 10%;
+    padding-left: 20%;
+    text-align: right;
+    .avatar  {
+      right: 0;
+      &::before {
+        // How we flip around the avatar
+        transform: rotateZ(90deg) scaleY(-1);
+      }
+    }
+  }
+}
+

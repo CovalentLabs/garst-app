@@ -1,0 +1,28 @@
+// PodStackComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+$connector-size: 6px;
+
+.stack {
+  padding-bottom: $spacer-y;
+
+  pw-profile-message {
+    position: relative;
+    padding-bottom: $spacer-y / 2;
+    z-index: 1;
+
+    &:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      border-left: $connector-size solid $md-time;
+      z-index: -1;
+      left: ($message-avatar-size - $connector-size) / 2;
+      height: 100%;
+      top: $message-avatar-size / 2;
+    }
+  }
+
+}

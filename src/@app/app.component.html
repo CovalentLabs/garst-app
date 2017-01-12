@@ -1,0 +1,28 @@
+
+<md-sidenav-container class="h-100">
+  <md-sidenav #sidenav >
+    <!-- sidenav content -->
+    <nav class="nav" (click)="sidenav.close()">
+      <a class="nav-link"
+          routerLink='/home'
+          routerLinkActive="active">
+        Profile
+      </a>
+      <a class="nav-link"
+          routerLink='/login'
+          routerLinkActive="active">
+        Settings
+      </a>
+    </nav>
+  </md-sidenav>
+
+  <div class="app-container">
+    <!-- primary content -->
+    <div class="outlet">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+  <pw-mock-menu></pw-mock-menu>
+</md-sidenav-container>
+

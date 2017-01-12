@@ -1,0 +1,8 @@
+// HomeComponent Styles
+
+@import 'bootstrap/custom';
+
+:host {
+  display: block;
+  padding: $spacer;
+}

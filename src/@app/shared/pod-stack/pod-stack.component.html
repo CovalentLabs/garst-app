@@ -1,0 +1,12 @@
+<!-- PodStackComponent Template -->
+<div class="stack">
+  <pw-profile-message
+      class="message d-flex flex-row align-content-stretch
+      touch-action-pan-y"
+      *ngFor="let gu of users"
+      (tap)="openUser.emit(gu)"
+      [profile]="gu.Profile"
+      [action]="gu.Profile.Tagline"
+      >
+  </pw-profile-message>
+</div>

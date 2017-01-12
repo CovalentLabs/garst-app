@@ -1,0 +1,144 @@
+// MockStateSelectorComponent Styles
+
+// styles applied on :host are applied on the current component, "app" in this case
+:host {
+  display: block;
+}
+
+.mock {
+  color: black;
+
+  .open, .dropup {
+    background: whitesmoke;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  .overlay {
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .overlay.active-overlay {
+    pointer-events: all;
+    opacity: 1;
+  }
+
+  .open {
+    line-height: 1;
+    text-align: center;
+    padding: 8px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    height: 36px;
+    width: 36px;
+    user-select: none;
+    cursor: pointer;
+
+    &.active-open {
+      background: dodgerblue;
+      color: white;
+    }
+  }
+
+  .toolbar {
+    bottom: 30%;
+    position: absolute;
+    right: 20px;
+    z-index: 9995;
+  }
+
+  .close-modal {
+    display: block;
+    background: #dbdbdb;
+  }
+
+  .debug-state {
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    color: black;
+    text-shadow: 0px 0px 10px white;
+    background: rgba(255,255,255,0.9);
+
+    font-weight: 500;
+    font-family: "Fira Code", Consolas, monospace;
+    padding: 4px;
+    font-size: 12px;
+    line-height: 1.1;
+
+    white-space: pre;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+
+    z-index: 9990;
+  }
+
+  pw-timeline-view {
+    position: absolute;
+    z-index: 9992;
+    bottom: 0;
+    width: 100%;
+    max-height: 100vh;
+  }
+
+  .dropup {
+    z-index: 9999;
+    position: absolute;
+    top: 10px;
+    right: 66px;
+    max-height: calc(100vh - 20px);
+    overflow: auto;
+    width: 220px;
+
+    .lang {
+      padding: 6px;
+      display: inline-block;
+      &:hover {
+        background: rgb(190, 230, 75);
+      }
+    }
+
+    > .title {
+      font-size: .8em;
+      font-weight: bold;
+      color: black;
+      text-transform: uppercase;
+    }
+
+    /*
+    // Use these for indicating special mock states...
+    [data-mock-key=WhitelistedSignedUpBeta],
+    [data-mock-key=RankingNotSubmitted],
+    [data-mock-key=PreppingNotOpened] {
+      background: rgba(255, 250, 0, 0.2);
+    }
+    [data-mock-key=PreppingOpened] {
+      background: rgba(255, 250, 0, 0.4);
+    }
+    */
+
+    > div {
+      padding: 6px;
+      padding-left: 4px;
+      border-bottom: 1px solid #d9d6cf;
+    }
+
+    > .open-link {
+      padding: 2px 1em;
+      display: inline-block;
+      cursor: pointer;
+      margin: 2px;
+      border-radius: 4px;
+      background: #ededed;
+      text-decoration: none;
+      &:hover {
+        background: lightskyblue;
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+<!-- ProfileCheckboxComponent Template -->
+
+<pw-profile-avatar [profile]="profile">
+</pw-profile-avatar>
+<div class="bounds">
+  <div class="d-flex flex-row align-items-baseline">
+    <div class="name d-flex-inline">{{ profile.FirstName }}</div>
+  </div>
+  <div class="description">{{ description }}</div>
+</div>
+<div class="checkbox">
+  <label>
+    <input type="checkbox">
+    <div class="display-checkbox">
+      <md-icon>check</md-icon>
+    </div>
+  </label>
+</div>
+

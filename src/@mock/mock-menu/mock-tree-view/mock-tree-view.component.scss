@@ -1,0 +1,23 @@
+// MockTreeViewComponent Styles
+
+:host {
+  display: block;
+}
+
+.folder-key {
+  padding: 4px 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: #dbdbdb;
+  }
+}
+
+.folder-name {
+  padding: 4px 8px;
+  font-weight: bold;
+}
+
+.folder-children {
+  padding-left: 1em;
+}

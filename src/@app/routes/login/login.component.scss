@@ -1,0 +1,12 @@
+// LoginComponent Styles
+
+@import 'bootstrap/custom';
+
+:host {
+  display: block;
+  padding: $spacer;
+}
+
+.alert-container {
+  text-align: center;
+}

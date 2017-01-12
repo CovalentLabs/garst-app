@@ -1,0 +1,14 @@
+<!-- ProfileMessageComponent Template -->
+
+<pw-profile-avatar [profile]="profile">
+</pw-profile-avatar>
+<div class="bounds">
+  <div class="d-flex flex-row align-items-baseline">
+    <div class="name d-flex-inline">{{ profile.FirstName }}</div>
+    <div class="time d-flex-inline">
+      <div [attr.data-content-before]="time"></div>
+    </div>
+  </div>
+  <div class="action">{{ action }}</div>
+  <div class="display">{{ messageText }}</div>
+</div>

@@ -1,0 +1,36 @@
+<!-- ReactToItemComponent Template -->
+
+<h1 md-dialog-title>Add Reaction</h1>
+<div md-dialog-content *ngIf="content != null">
+  <blockquote class="blockquote">
+    <p class="mb-0">{{ content }}</p>
+  </blockquote>
+</div>
+<div md-dialog-actions>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <button class="btn btn-secondary form-control" (click)="onSelectReaction('wave')">Wave</button>
+        </td>
+        <td>
+          <button class="btn btn-secondary form-control" (click)="onSelectReaction('smile')">Smile</button>
+        </td>
+        <td>
+          <button class="btn btn-secondary form-control" (click)="onSelectReaction('agree')">Agree</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button class="btn btn-secondary form-control" (click)="onSelectReaction('bump')">Bump</button>
+        </td>
+        <td>
+          <button class="btn btn-secondary form-control" (click)="onSelectReaction('cry')">Cry</button>
+        </td>
+        <td>
+          <button class="btn btn-secondary form-control" (click)="onSelectReaction('disagree')">Disagree</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

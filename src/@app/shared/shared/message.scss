@@ -1,0 +1,28 @@
+
+@import 'bootstrap/custom';
+
+:host {
+  display: flex;
+  flex-direction: row;
+  align-content: stretch;
+
+  font-size: $ui-font-base-size;
+  color: $message-color;
+}
+
+pw-profile-avatar {
+  display: flex;
+  margin-top: 4px;
+  width: $message-avatar-size;
+  height: $message-avatar-size;
+}
+
+.bounds {
+  padding-left: $spacer-x;
+  // This is the spacing between this message and the next.
+  padding-bottom: $message-bounds-padding-bottom;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}

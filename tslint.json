@@ -6,7 +6,6 @@
     "member-access": false,
     "member-ordering": [
       true,
-      "public-before-private",
       "static-before-instance",
       "variables-before-functions"
     ],
@@ -90,7 +89,7 @@
     ],
     "ban": false,
     "no-conditional-assignment": true,
-    "switch-default": true,
+    "switch-default": false,
     "no-require-imports": false,
     "trailing-comma": [
       false,

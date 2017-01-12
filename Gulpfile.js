@@ -20,6 +20,7 @@ gulp.task('styles', function() {
     gulp.src([
       './src/**/*.scss',
       '!./src/@styles/**',
+      '!./src/public/**',
     ])
         .pipe(sass(SASS_CONFIG).on('error', sass.logError))
         .pipe(gulp.dest('./src/'))

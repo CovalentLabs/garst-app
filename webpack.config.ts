@@ -79,10 +79,12 @@ const DLL_VENDORS = [
 ];
 
 const COPY_FOLDERS = [
-  { from: 'src/public/', to: 'www' },
+  { from: 'src/public/' },
   // TODO Figure out if we can use/need jQuery global
   { from: 'node_modules/hammerjs/hammer.min.js' },
   { from: 'node_modules/hammerjs/hammer.min.js.map' },
+  { from: 'node_modules/jquery/dist/jquery.slim.min.js' },
+  { from: 'node_modules/jquery/dist/jquery.slim.min.map' },
   ...MY_COPY_FOLDERS
 ];
 
@@ -216,11 +218,11 @@ const clientConfig = function webpackConfig(): WebpackConfig {
   } else {
     if (AOT) {
         config.entry = {
-          main: './src/main.browser.aot'
+          main: './src/main.browser.aot',
         };
       } else {
         config.entry = {
-          main: './src/main.browser'
+          main: './src/main.browser',
         };
       }
   }
@@ -241,7 +243,7 @@ const clientConfig = function webpackConfig(): WebpackConfig {
 
   config.devServer = {
     // Use content base to include www
-    contentBase: [AOT ? './compiled' : './src/public'].concat(['./www']),
+    contentBase: [AOT ? './compiled' : './src/public'],
     port: CONSTANTS.PORT,
     historyApiFallback: {
       disableDotRule: true,
@@ -277,7 +279,7 @@ const clientConfig = function webpackConfig(): WebpackConfig {
     extensions: ['.ts', '.js', '.json'],
     alias: {
       "@app": root("src/@app"),
-      "@mock": root("src/@mock")
+      "@mock": root("src/@mock"),
     }
   };
 

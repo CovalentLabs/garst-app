@@ -1,0 +1,28 @@
+<!-- TimelineViewComponent Template -->
+<div class="timeline-list" *ngIf="timeline"
+    [class.is-interactive]="interactive">
+  <div class="title"
+      (click)="interactive = !interactive; changes.detectChanges()">
+    Timeline
+  </div>
+  <div class="timeline-entry"
+      (click)="onClick(entry)"
+      *ngFor="let entry of timeline"
+      [attr.data-entry-type]="entry.type">
+    <span class="type">{{entry.type}}</span>
+    <ng-container [ngSwitch]="entry.type">
+      <ng-container *ngSwitchCase="'navigation'">
+        <strong>{{entry.data.reason}}</strong>:
+        <span>{{entry.data.from}} => {{entry.data.to}}</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'note'">
+        <strong>{{entry.data.type}}</strong>:
+        <span>{{entry.data.message}}</span>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <strong>{{entry.data.type}}</strong>:
+        <span>{{entry.data.name}}</span>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

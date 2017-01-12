@@ -1,0 +1,33 @@
+
+
+<div
+  *ngFor="let v of [null, 'md', 'lg']"
+  class="btn btn-default"
+  [class.btn-warning]="vitreView == v"
+  (click)="vitreView = v">{{ v || 'null' }}</div>
+
+<pw-vitre-container class="vitre-lr"
+    vitre-direction="row"
+    vitre-frame-index="0"
+    [vitre-view]="vitreView"
+    >
+  <pw-vitre
+      vitre-col="12"
+      vitre-col-md="4"
+      vitre-col-lg="12"
+      >
+    Hola 1
+  </pw-vitre>
+  <pw-vitre
+      vitre-col="12"
+      vitre-col-md="8"
+      vitre-col-lg="12"
+      >
+    Hola 2
+  </pw-vitre>
+  <pw-vitre
+      vitre-col="12"
+      >
+    Hola 3
+  </pw-vitre>
+</pw-vitre-container>

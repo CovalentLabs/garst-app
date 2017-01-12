@@ -1,0 +1,99 @@
+
+@import 'bootstrap/custom';
+
+.test-elt {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+
+  transform: translate(20px, 100px);
+
+  padding: 1em;
+  opacity: .5;
+  background: greenyellow;
+  border-radius: 100%;
+}
+
+.info-blocks {
+  [class^=ib-] {
+    padding: ($spacer-y * .75) ($spacer-x * .5);
+    transition: padding .2s ease-in;
+
+    /* Lunch: */
+    font-family: SFUIDisplay-Bold;
+    font-size: $ui-font-base-size * 1.2;
+    color: #272727;
+  }
+
+  &.ib-mini {
+    [class^=ib-] {
+      padding: ($spacer-y * .2) ($spacer-x * .5);
+    }
+  }
+
+  $activity-bg: #E57373;
+  $time-bg: #EF9A9A;
+  $place-bg: #FFCDD2;
+
+  .ib-activity {
+    background-color: $activity-bg;
+  }
+
+  .ib-time {
+    background-color: $time-bg;
+  }
+
+  .ib-place {
+    background-color: $place-bg;
+  }
+}
+
+$type-space-x: 16px;
+
+.message-scroller {
+  overflow: auto;
+  position: relative;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+
+$message-input-placeholder-color: #607D8B;
+$message-input-caret-color: $message-action-color;
+.message-input {
+  font-family: SFUIDisplay-Regular;
+
+  max-height: 20vh;
+
+  color: $message-input-caret-color;
+  text-shadow: 0px 0px 0px $message-color;
+  -webkit-text-fill-color: transparent;
+
+  &::-webkit-input-placeholder {
+    color: $message-input-placeholder-color;
+    text-shadow: none;
+    -webkit-text-fill-color: initial;
+  }
+}
+
+$input-indication-background: #FFEBEE;
+.input-bg {
+  background-color: $input-indication-background;
+}
+
+// Global method to insert content before
+[data-content-before]::before {
+  content: attr(data-content-before);
+}
+
+.message {
+  .bounds {
+    .message-input {
+      font-size: $ui-font-base-size;
+      margin-top: 4px;
+    }
+  }
+}
+

@@ -1,0 +1,36 @@
+<!-- LoginComponent Template -->
+
+<div class="text-center">
+  <ng-container *ngIf="!AppState.Login.IsLoggedIn">
+    <h2>Login</h2>
+    <button class="btn btn-primary" (click)="onClickLogin()">Login</button>
+  </ng-container>
+  <ng-container *ngIf="AppState.Login.IsLoggedIn">
+    <h2>Settings</h2>
+    <p>
+      You are currently logged in as {{AppState.Login.Credentials.Profile.FirstName}}.
+    </p>
+    <button class="btn btn-default" (click)="onClickLogout()">Logout</button>
+  </ng-container>
+</div>
+<br>
+<!--<pre>{{ AppState | json }}</pre>-->
+
+<div class="alert-container">
+  <div *ngIf="AppState.Login.LoginError">
+    <div class="alert alert-warning">
+      <code>
+        {{AppState.Login.LoginError.ErrorId}}
+      </code>
+      {{AppState.Login.LoginError.Reason}}
+    </div>
+  </div>
+
+  <div *ngIf="AppState.Login.HasLoggedOut">
+    <div class="alert alert-success">
+      Logged out!
+    </div>
+  </div>
+</div>
+
+

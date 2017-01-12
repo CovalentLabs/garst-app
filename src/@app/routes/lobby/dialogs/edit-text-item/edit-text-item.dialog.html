@@ -1,0 +1,10 @@
+<!-- EditTextItemComponent Template -->
+
+<h1 md-dialog-title>Edit Message</h1>
+<div class="form-group">
+  <textarea class="form-control" pw-auto-grow [(ngModel)]="editString" placeholder="Write..."></textarea>
+</div>
+<div md-dialog-actions class="float-xs-right">
+  <button md-button (click)="onConfirm(false)">Cancel</button>
+  <button md-button (click)="onConfirm(true)">Save</button>
+</div>

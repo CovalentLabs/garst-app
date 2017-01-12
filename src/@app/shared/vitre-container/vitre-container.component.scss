@@ -1,0 +1,64 @@
+// VitreContainerComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+// Be Safe; No Encapsulation!
+
+pw-vitre-container {
+  display: block;
+  position: relative;
+
+  > .vitre-container-content {
+    display: flex;
+    transition:
+      height .2s cubic-bezier(0.55, 0.085, 0.68, 0.53),
+      width .2s cubic-bezier(0.55, 0.085, 0.68, 0.53),
+      transform .5s ease-out;
+
+    > pw-vitre {
+      transition:
+        height .2s cubic-bezier(0.55, 0.085, 0.68, 0.53),
+        width .2s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    }
+  }
+}
+
+$vitre-columns: 12;
+
+@mixin make-col($size, $columns: $vitre-columns) {
+  // flex: 0 0 percentage($size / $columns);
+  width: percentage($size / $columns);
+  // Add a `max-width` to ensure content within each column does not blow out
+  // the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
+  // do not appear to require this.
+  max-width: percentage($size / $columns);
+}
+@mixin make-row($size, $columns: $vitre-columns) {
+  // flex: 0 0 percentage($size / $columns);
+  height: percentage($size / $columns);
+  // Add a `max-width` to ensure content within each column does not blow out
+  // the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
+  // do not appear to require this.
+  max-height: percentage($size / $columns);
+}
+
+//<div class="vitre-container-content">
+//  <ng-content></ng-content>
+//</div>
+//<!--<div class="curtains"></div>-->
+
+pw-vitre-container[vitre-direction=row] {
+  > .vitre-container-content {
+    flex-direction: row;
+    height: 100%;
+  }
+}
+
+pw-vitre-container[vitre-direction=column] {
+  > .vitre-container-content {
+    flex-direction: column;
+    width: 100%;
+  }
+}

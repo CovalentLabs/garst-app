@@ -1,0 +1,23 @@
+<!-- InputTimeComponent Template -->
+
+<div [formGroup]="timeform">
+  <div class="flex-cont input-cont">
+    <input #hs type="number"
+        (change)="(hs.value > 12 && (hs.value = 1)) || (hs.value < 1 && (hs.value = 12))"
+        formControlName="hours">
+    <span>:</span>
+    <input #ms type="number" step="5"
+        (change)="(ms.value > 59 && (ms.value = 0)) || (ms.value < 0 && (ms.value = 55))"
+        formControlName="minutes">
+  </div>
+  <div class="flex-cont">
+    <label class="time-a">
+      <input type="radio" value="AM" formControlName="apradio">
+      <span>AM</span>
+    </label>
+    <label class="time-a">
+      <input type="radio" value="PM" formControlName="apradio">
+      <span>PM</span>
+    </label>
+  </div>
+</div>

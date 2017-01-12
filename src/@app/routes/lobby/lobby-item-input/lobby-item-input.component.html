@@ -1,0 +1,59 @@
+<!-- LobbyItemInputComponent Template -->
+<div class="message-input"
+    [class.is-editing]="editItem != null">
+  <div class="input-group">
+    <div class="input-group-btn">
+      <button class="btn btn-secondary" [mdMenuTriggerFor]="menu">
+        <ng-container [ngSwitch]="type">
+          <md-icon *ngSwitchCase="TEXT">insert_comment</md-icon>
+          <md-icon *ngSwitchCase="MEDIA">insert_photo</md-icon>
+          <md-icon *ngSwitchCase="USER_HAS_ARRIVED_UPDATE">beenhere</md-icon>
+        </ng-container>
+      </button>
+    </div>
+    <md-menu #menu="mdMenu">
+      <button md-menu-item
+          (click)="type = MEDIA"
+          [disabled]="type === MEDIA">
+        <md-icon>insert_photo</md-icon>
+        <span>Media</span>
+      </button>
+      <button md-menu-item
+          (click)="type = USER_HAS_ARRIVED_UPDATE"
+          [disabled]="type === USER_HAS_ARRIVED_UPDATE">
+        <md-icon>beenhere</md-icon>
+        <span>Location</span>
+      </button>
+      <button md-menu-item
+          (click)="type = TEXT"
+          [disabled]="type === TEXT">
+        <md-icon>insert_comment</md-icon>
+        <span>Text</span>
+      </button>
+    </md-menu>
+    <ng-container [ngSwitch]="type">
+      <ng-container *ngSwitchCase="TEXT">
+        <input type="text" class="form-control" placeholder="Write..."
+            [(ngModel)]="data">
+        <span class="input-group-btn"
+            *ngIf="editItem == null">
+          <button class="btn btn-secondary" type="button"
+              (click)="onClickSend()">
+            <md-icon>send</md-icon>
+          </button>
+        </span>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <button class="btn btn-secondary"
+            (click)="type = TEXT">
+          Back to TEXT
+        </button>
+      </ng-container>
+    </ng-container>
+  </div>
+  <div class="edit-actions">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Action
+    </button>
+  </div>
+</div>

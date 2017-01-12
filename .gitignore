@@ -4,6 +4,8 @@ Icon?
 Thumbs.db
 .idea
 
+*.log
+
 # Cordova #
 /platforms
 /plugins

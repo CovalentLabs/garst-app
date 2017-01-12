@@ -1,0 +1,9 @@
+<!-- LobbyMessagesComponent Template -->
+
+<ng-container
+    *ngIf="itemGroups && itemGroups.length">
+  <pw-item-group *ngFor="let itemGroup of itemGroups"
+      [attr.position]="myProfileId === itemGroup.ProfileId ? 'right' : 'left'"
+      [itemGroup]="itemGroup">
+  </pw-item-group>
+</ng-container>

@@ -1,0 +1,9 @@
+// styles applied on :host are applied on the current component, "app" in this case
+
+@import 'bootstrap/custom';
+
+.outlet {
+  // Expand to fill available v-space
+  // flex: 1;
+  // position: relative;
+}

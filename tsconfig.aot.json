@@ -12,6 +12,11 @@
     "strictNullChecks": false,
     "skipDefaultLibCheck": true,
     "outDir": "output",
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["./src/@app/*"],
+      "@mock/*": ["./src/@mock/*"]
+    },
     "typeRoots": [
       "node_modules/@types"
     ]

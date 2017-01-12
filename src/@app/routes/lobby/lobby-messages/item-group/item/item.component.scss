@@ -1,0 +1,47 @@
+// ItemComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+:host {
+  display: block;
+  pointer-events: all;
+}
+
+.item-container {
+  display: inline-block;
+}
+
+.item {
+  &.small {
+    padding: $input-padding-y/1.5 $input-padding-x/1.5;
+  }
+  &.message {
+    padding: $input-padding-y $input-padding-x;
+  }
+  border: 2px solid $ui-primary;
+  border-radius: 5px;
+
+  display: inline-block;
+}
+
+.message {
+  font-size: 20px;
+}
+
+:host[data-position=left] {
+  .item {
+    background: $ui-primary;
+    color: $ui-background;
+    border-color: $ui-background;
+  }
+}
+
+:host[data-position=right] {
+  .item {
+    background: $ui-background;
+    color: $ui-primary;
+    border-color: $ui-primary;
+  }
+}

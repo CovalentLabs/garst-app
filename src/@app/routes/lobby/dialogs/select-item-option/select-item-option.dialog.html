@@ -1,0 +1,21 @@
+<!-- SelectItemOptionComponent Template -->
+
+<h1 md-dialog-title>Options</h1>
+<div md-dialog-content *ngIf="content != null">
+  <blockquote class="blockquote">
+    <p class="mb-0">{{ content }}</p>
+  </blockquote>
+</div>
+<div class="list-group" class="text-center">
+  <ng-container>
+    <button class="list-group-item list-group-item-action" (click)="onSelectOption(OPTION_REACT, 'REACT')">Add Reaction</button>
+  </ng-container>
+  <ng-container *ngIf="canReport">
+    <button class="list-group-item list-group-item-action" (click)="onSelectOption(OPTION_REPORT, 'REPORT')">Report</button>
+  </ng-container>
+  <ng-container *ngIf="canEdit">
+    <button class="list-group-item list-group-item-action" (click)="onSelectOption(OPTION_EDIT, 'EDIT')">Edit</button>
+    <button class="list-group-item list-group-item-action" (click)="onSelectOption(OPTION_DELETE, 'DELETE')">Delete</button>
+  </ng-container>
+</div>
+

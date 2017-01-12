@@ -1,0 +1,24 @@
+// PanelHeaderComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+.panel-header {
+   .title {
+     /* Groups: */
+    font-family: SFUIDisplay-Heavy;
+    font-size: $font-size-h3;
+
+    margin-bottom: 4px;
+   }
+   .title + .line {
+     width: 48px;
+     border-bottom: 1px solid $brand-primary;
+   }
+   .sub {
+     /* What does your group: */
+    font-family: SFUIDisplay-Light;
+    font-size: $font-size-sm;
+   }
+}

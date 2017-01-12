@@ -1,0 +1,51 @@
+// InputAvailabilityComponent Styles
+
+@import 'bootstrap/custom';
+
+$border-color: $ui-primary;
+$background:  $ui-background;
+
+:host {
+  display: block;
+  position: relative;
+}
+
+$text-size: 12px;
+
+.title {
+  color: $border-color;
+  font-size: $text-size;
+}
+
+.avail-container {
+  border: 2px solid $border-color;
+}
+
+
+.until-display {
+  border-bottom: 2px solid $border-color;
+
+  font-size: $text-size;
+
+  text-align: center;
+
+  height: $text-size * .8;
+  margin-bottom: $text-size;
+
+  > span {
+    background: $background;
+    display: inline-block;
+
+    color: $border-color;
+
+    padding: 0px 12px;
+    text-transform: uppercase;
+  }
+}
+
+.confirm-button {
+  color: whitesmoke;
+  width: 100%;
+  background: $border-color;
+  border: none;
+}

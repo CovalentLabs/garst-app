@@ -1,0 +1,27 @@
+// styles applied on :host are applied on the current component, "app" in this case
+
+@import 'bootstrap/custom';
+
+.app-container {
+  height: 100%;
+  // Allows to expand to fill available space
+  display: flex;
+  flex-direction: column;
+  align-content: stretch;
+
+  background: $ui-background;
+
+  .outlet {
+    // Expand to fill available v-space
+    flex: 1;
+    position: relative;
+  }
+}
+
+md-sidenav {
+  background: $gray-lightest;
+  .nav-link {
+    display: block;
+    padding: $spacer / 2;
+  }
+}

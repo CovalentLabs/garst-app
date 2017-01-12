@@ -1,0 +1,196 @@
+
+<pw-vitre-container
+    vitre-direction="column"
+    vitre-frame-index="1"
+    class="h-100 w-100 p-absolute"
+    #vit2
+    >
+  <pw-vitre
+      vitre-name="profile"
+      vitre-row="12"
+      >
+    <div class="window h-100
+          d-flex flex-column align-content-stretch">
+      <pw-panel-header
+          title="Profile"
+          subtitle="This is you">
+      </pw-panel-header>
+      <div class="px-2">
+        <pw-profile-message
+            *ngIf="currGU"
+            [profile]="currGU.Profile"
+            [action]="currGU.Profile.Tagline"
+            >
+        </pw-profile-message>
+      </div>
+      <div pw-shadow-scroller class="px-2">
+        <div class="touch-action-pan-y">
+          <pw-pod-stack
+              [users]="pod$"
+              (openUser)="currGU = $event"
+              >
+          </pw-pod-stack>
+          <pw-pod-stack
+              [users]="pod1"
+              (openUser)="currGU = $event"
+              >
+          </pw-pod-stack>
+        </div>
+      </div>
+      <div class="container-fluid m-0">
+        <div class="row info-blocks ib-mini" (tap)="vit2.goto('main')">
+          <div class="ib-activity col-6 col-sm-3" (tap)="vit.goto('group')">5 In Group</div>
+          <div class="ib-time col-6 col-sm-3" (tap)="vit.goto('chat')">3 Messages <md-icon>chat</md-icon></div>
+          <div class="ib-place col-12 col-sm-6" (tap)="vit.goto('friends')">12 Friends <md-icon>group</md-icon></div>
+        </div>
+      </div>
+    </div>
+  </pw-vitre>
+
+  <pw-vitre
+      vitre-name="main"
+      vitre-row="12"
+      >
+<pw-vitre-container
+    vitre-direction="row"
+    vitre-frame-index="1"
+    class="h-100 w-100 p-absolute"
+    #vit
+    >
+  <pw-vitre
+      vitre-name="group"
+      vitre-col="12"
+      vitre-col-md="4"
+      vitre-row="12"
+      vitre-row-md="4"
+      >
+    <div class="window h-100
+          d-flex flex-column align-content-stretch">
+      <pw-panel-header
+          title="Group"
+          subtitle="What does your group look like?">
+      </pw-panel-header>
+      <div class="px-2">
+        <pw-profile-message
+            *ngIf="currGU"
+            [profile]="currGU.Profile"
+            [action]="currGU.Profile.Tagline"
+            >
+        </pw-profile-message>
+      </div>
+      <div pw-shadow-scroller class="px-2">
+        <div class="touch-action-pan-y">
+          <pw-pod-stack
+              [users]="pod$"
+              (openUser)="currGU = $event"
+              >
+          </pw-pod-stack>
+          <pw-pod-stack
+              [users]="pod1"
+              (openUser)="currGU = $event"
+              >
+          </pw-pod-stack>
+        </div>
+      </div>
+      <div class="container-fluid m-0">
+        <div class="row info-blocks ib-mini">
+          <div class="ib-activity col-6 col-sm-3" (tap)="vit2.goto('profile')">Lunch</div>
+          <div class="ib-time col-6 col-sm-3" (tap)="vit.goto('group')">11:15am <md-icon>mode_edit</md-icon></div>
+          <div class="ib-place col-12 col-sm-6" (tap)="vit.goto('chat')">Garst Dining Hall <md-icon>place</md-icon></div>
+        </div>
+      </div>
+    </div>
+  </pw-vitre>
+
+  <pw-vitre
+      vitre-name="chat"
+      vitre-col="12"
+      vitre-col-md="8"
+      vitre-row="12"
+      vitre-row-md="8"
+      >
+    <div class="window h-100
+          d-flex flex-column align-content-stretch">
+      <div class="test-elt"></div>
+      <div class="container-fluid m-0">
+        <div class="row info-blocks">
+          <div class="ib-activity col-6 col-sm-3">Lunch</div>
+          <div class="ib-time col-6 col-sm-3" (tap)="vit.goto('group')">11:15am <md-icon>mode_edit</md-icon></div>
+          <div class="ib-place col-12 col-sm-6" (tap)="vit.goto('chat')">Garst Dining Hall <md-icon>place</md-icon></div>
+        </div>
+      </div>
+      <div pw-shadow-scroller class="px-1">
+        <div class="touch-action-pan-y">
+          <pw-profile-message
+              *ngFor="let gu of AppState.Lobby.Group.GroupUsers"
+              [profile]="gu.Profile"
+              [action]="gu.Profile.Tagline"
+              [messageText]="gu.Profile.Tagline"
+              [time]="time"
+              >
+          </pw-profile-message>
+        </div>
+      </div>
+      <div class="px-1 input-bg">
+        <div class="message d-flex flex-row align-content-stretch">
+          <pw-profile-avatar [profile]="AppState.Login.Credentials.Profile">
+          </pw-profile-avatar>
+          <div class="bounds">
+            <textarea type="text" class="form-control message-input"
+                pw-auto-grow
+                placeholder="Write message..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </pw-vitre>
+  <pw-vitre
+      vitre-name="friends"
+      vitre-col="12"
+      vitre-row="12"
+      >
+    <div class="window h-100
+          d-flex flex-column align-content-stretch">
+      <pw-panel-header
+          title="Recent">
+      </pw-panel-header>
+      <div class="px-1 input-bg">
+        <div class="message d-flex flex-row align-content-stretch">
+          <div class="bounds">
+            <textarea type="text" class="form-control message-input"
+                pw-auto-grow
+                placeholder="Add by phone number..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div pw-shadow-scroller class="touch-action-pan-y px-1">
+        <pw-profile-checkbox
+            *ngFor="let gu of AppState.Lobby.Group.GroupUsers"
+            [profile]="gu.Profile"
+            [description]="gu.Profile.Tagline"
+            >
+        </pw-profile-checkbox>
+      </div>
+      <pw-panel-header
+          title="Favorites">
+      </pw-panel-header>
+      <div pw-shadow-scroller class="touch-action-pan-y px-1">
+        <pw-profile-message
+            *ngFor="let gu of AppState.Lobby.Group.GroupUsers"
+            [profile]="gu.Profile"
+            [action]="gu.Profile.Tagline"
+            [messageText]="gu.Profile.Tagline"
+            [time]="time"
+            >
+        </pw-profile-message>
+      </div>
+    </div>
+  </pw-vitre>
+</pw-vitre-container>
+  </pw-vitre>
+</pw-vitre-container>
+<!-- hidden for a moment -->
+
+<!-- hidden for a moment -->
+
+<!-- hidden for a moment -->

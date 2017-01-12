@@ -11,6 +11,11 @@
     "pretty": true,
     "sourceMap": true,
     "strictNullChecks": false,
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["./src/@app/*"],
+      "@mock/*": ["./src/@mock/*"]
+    },
     "typeRoots": [
       "node_modules/@types"
     ]

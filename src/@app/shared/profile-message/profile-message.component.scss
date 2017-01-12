@@ -1,0 +1,37 @@
+// ProfileMessageComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+.bounds {
+  .name {
+    /* Name: */
+    font-family: SFUIDisplay-Bold;
+    color:       $message-name-color;
+    line-height: $message-title-line-height;
+  }
+
+  .time {
+    /* 5m: */
+    font-family: SFUIDisplay-Regular;
+    font-size:   $message-time-size;
+    margin-left: $message-time-margin-left;
+    color:       $message-time-color;
+    // Height of Name takes precedence!
+    line-height: 0;
+  }
+
+  .display {
+    /* Do you guys want to: */
+    font-family: SFUIDisplay-Regular;
+    line-height: $message-display-line-height;
+  }
+
+  .action {
+    /* ActionDisplay: */
+    font-family: SFUIDisplay-Semibold;
+    color: $message-action-color;
+    line-height: $message-display-line-height;
+  }
+}

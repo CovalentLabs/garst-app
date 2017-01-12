@@ -1,0 +1,37 @@
+
+@import 'color-map';
+
+body {
+  padding: 20px;
+  background: color-map('blue', '50');
+}
+
+// Our custom specs from src/@app/style/bootstrap/_custom.scss
+@import 'bootstrap/custom';
+
+$enable-flex: true;
+// The Bootstrap node_module
+@import '~bootstrap/scss/bootstrap';
+
+@import 'angular-material/custom';
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($candy-app-theme);
+
+// Helpers required for HammerJS bindings
+.touch-action-auto {
+  touch-action: auto !important;
+}
+.touch-action-pan-y {
+  touch-action: pan-y !important;
+}
+
+// Global method to insert content before
+[data-content-before]::before {
+  content: attr(data-content-before);
+}
+
+body {
+  font-size: 22px;
+}

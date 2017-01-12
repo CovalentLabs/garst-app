@@ -1,0 +1,17 @@
+<!-- MockTreeViewComponent Template -->
+<ng-container *ngIf="folder.key">
+  <div class="folder-key" (click)="onSelect(folder.key)">
+    {{ folder.name }}
+  </div>
+</ng-container>
+<ng-container *ngIf="folder.children && folder.children.length">
+  <div class="folder-name">{{ folder.name }}</div>
+  <div *ngFor="let f of folder.children"
+      class="folder-children">
+    <pw-mock-tree-view
+        [folder]="f"
+        (select)="onSelect($event)">
+    </pw-mock-tree-view>
+  </div>
+</ng-container>
+

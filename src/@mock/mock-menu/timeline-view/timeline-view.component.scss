@@ -1,0 +1,73 @@
+// TimelineViewComponent Styles
+
+:host {
+  display: block;
+  // background: #dbdbdb;
+  padding: 4px;
+  box-shadow: 0 4px 4px rgba(0,0,0,0.2) inset;
+  pointer-events: none !important;
+}
+
+.timeline-list {
+  pointer-events: none;
+  opacity: .7;
+  .title {
+    pointer-events: all;
+    user-select: none;
+    cursor: pointer;
+    position: absolute;
+    padding: 0px 4px;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    background: slategrey;
+    color: white;
+  }
+  &.is-interactive {
+    pointer-events: all;
+    opacity: 1;
+    .title {
+      background: dodgerblue;
+    }
+  }
+
+  // scroll bar wisth is 17px
+  max-height: calc(100vh - 17px);
+  width: 100%;
+  overflow-y: auto;
+}
+
+.timeline-entry {
+  font-size: 10px;
+  padding: 4px;
+  margin: 4px 20px;
+  background: whitesmoke;
+  border: 1px solid white;
+
+  > * {
+    display: inline-block;
+  }
+
+  .type {
+    background: white;
+    color: fuscia;
+    font-weight: bold;
+    mix-blend-mode: exclusion;
+    padding: .2em .5em;
+  }
+
+  opacity: .8;
+
+  &[data-entry-type=navigation] { background-color: rgb(20%, 80%, 60%); }
+  &[data-entry-type=action] { background-color: rgb(68.6%, 89%, 7.5%); }
+  &[data-entry-type=effect] { background-color: rgb(100%, 43.9%, 20.4%); }
+
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+    background: lightgoldenrodyellow;
+  }
+}

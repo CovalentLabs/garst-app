@@ -1,0 +1,8 @@
+<!-- LobbyComponent Template -->
+
+<!-- AppState.Lobby: { Group, LobbyItems }-->
+<pw-lobby-messages [myProfileId]="myProfileId"
+    [itemGroups]="ItemGroups"></pw-lobby-messages>
+
+<pw-lobby-item-input (send)="sendMessage($event)">
+</pw-lobby-item-input>

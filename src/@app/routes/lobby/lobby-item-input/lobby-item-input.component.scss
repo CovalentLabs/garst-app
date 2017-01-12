@@ -1,0 +1,37 @@
+// LobbyItemInputComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+.message-input {
+  pointer-events: all;
+  display: block;
+  padding: 4px;
+
+  .edit-actions {
+    // max-height is transitionable, while height is not.
+    max-height: 0;
+    transition: max-height .4s;
+    overflow: hidden;
+  }
+
+  &.is-editing {
+    &::select {
+      background: $mark-bg;
+    }
+
+    .edit-actions {
+      // max-height is transitionable, while height is not.
+      max-height: 12px;
+    }
+
+    .form-control {
+      background: $state-warning-bg;
+
+      &:focus {
+        border-color: $state-warning-border;
+      }
+    }
+  }
+}

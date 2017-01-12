@@ -1,0 +1,14 @@
+// LockUpdateComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+:host {
+  md-icon {
+    margin-top: .2em;
+    font-size: 1.1em;
+    width: 1.3em;
+    height: 1em;
+  }
+}

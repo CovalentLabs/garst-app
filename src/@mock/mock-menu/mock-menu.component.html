@@ -1,0 +1,53 @@
+<!-- MockStateSelectorComponent Template -->
+
+<div class="mock">
+  <div class="toolbar">
+    <div class="open" title="Show Mock States"
+        [class.active-open]="AppState.Mock.ShowMockMenu"
+        (click)="toggleMockMenu()">
+      M
+    </div>
+    <div class="open" title="Show Debug AppState"
+        [class.active-open]="AppState.Mock.ShowDebugState"
+        (click)="toggleDebugState()">
+      S
+    </div>
+    <div class="open" title="Show Timeline"
+        [class.active-open]="AppState.Mock.ShowTimeline"
+        (click)="toggleTimeline()">
+      T
+    </div>
+  </div>
+
+  <!--Timeline-->
+  <ng-container *ngIf="Timeline">
+    <pw-timeline-view
+        class="overlay"
+        [class.active-overlay]="AppState.Mock.ShowTimeline"
+        [timeline]="Timeline" (selectEntry)="selectTimelineEntry($event)">
+    </pw-timeline-view>
+  </ng-container>
+
+  <!--DebugState-->
+  <div
+      class="overlay"
+      [class.active-overlay]="AppState.Mock.ShowDebugState">
+    <div class="debug-state">{{ AppState | json }}</div>
+  </div>
+
+  <div class="dropup overlay"
+      [class.active-overlay]="AppState.Mock.ShowMockMenu"
+      (click)="toggleMockMenu(false)">
+    <div class="title">Select State</div>
+    <pw-mock-tree-view
+        *ngFor="let f of mockStateFolders"
+        [folder]="f"
+        (select)="select($event)">
+    </pw-mock-tree-view>
+    <div class="title">Links</div>
+    <div class="open-link" *ngFor="let url of mockUrls" (click)="navigate(url)">
+      {{ url }}
+    </div>
+    <div class="btn close-modal" (click)="toggleMockMenu(false)">Close</div>
+  </div>
+</div>

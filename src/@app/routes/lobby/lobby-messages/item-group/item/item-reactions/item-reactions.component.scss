@@ -1,0 +1,36 @@
+// ReactionComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+:host {
+  position: relative;
+}
+
+$size: 6px;
+
+.reaction-container {
+  display: flex;
+  flex-direction: row;
+  max-height: 0px;
+  transition: max-height .4s;
+  overflow: hidden;
+
+  &.show {
+    max-height: $size*3.333;
+  }
+}
+
+.reaction {
+  margin-right: $size / 2;
+
+  padding: $size/2 $size;
+  line-height: 1;
+
+  font-size: $size * 2;
+
+  .counter {
+    font-weight: bold;
+  }
+}

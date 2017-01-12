@@ -1,0 +1,18 @@
+// LobbyComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  height: 100%;
+  align-content: stretch;
+  user-select: none;
+}
+
+pw-lobby-messages {
+  flex: 1;
+}

@@ -1,0 +1,10 @@
+<!-- LockUpdateComponent Template -->
+
+<ng-container *ngIf="LOCKED === data">
+  <md-icon>lock</md-icon>
+  <span>Locked group</span>
+</ng-container>
+<ng-container *ngIf="UNLOCKED === data">
+  <md-icon>lock_open</md-icon>
+  <span>Unlocked group</span>
+</ng-container>

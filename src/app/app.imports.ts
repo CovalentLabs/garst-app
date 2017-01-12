@@ -7,6 +7,6 @@ import { routes } from './app.routing';
 export const APP_IMPORTS = [
   ReactiveFormsModule,
   IdlePreloadModule.forRoot(), // forRoot ensures the providers are only created once
-  RouterModule.forRoot(routes, { useHash: false, preloadingStrategy: IdlePreload })
+  RouterModule.forRoot(routes, { useHash: true, preloadingStrategy: IdlePreload })
 ];
 

@@ -21,7 +21,7 @@ const {
   NoErrorsPlugin
 } = require('webpack');
 
-const CompressionPlugin = require('compression-webpack-plugin');
+// const CompressionPlugin = require('compression-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CheckerPlugin } = require('awesome-typescript-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -172,13 +172,15 @@ const clientConfig = function webpackConfig(): WebpackConfig {
         beautify: false,
         comments: false
       }),
-      new CompressionPlugin({
-        asset: '[path].gz[query]',
-        algorithm: 'gzip',
-        test: /\.js$|\.html$/,
-        threshold: 10240,
-        minRatio: 0.8
-      }),
+      // Compression plugin can interfere with Android deployment
+      // comment out until it is actually useful.
+      // new CompressionPlugin({
+      //   asset: '[path].gz[query]',
+      //   algorithm: 'gzip',
+      //   test: /\.js$|\.html$/,
+      //   threshold: 10240,
+      //   minRatio: 0.8
+      // }),
       ...MY_CLIENT_PRODUCTION_PLUGINS,
     );
     if (!E2E && !WATCH) {
@@ -243,6 +245,7 @@ const clientConfig = function webpackConfig(): WebpackConfig {
 
   config.devServer = {
     // Use content base to include www
+    // TODO, I don't know if the AOT webserver should point at compiled...
     contentBase: [AOT ? './compiled' : './src/public'],
     port: CONSTANTS.PORT,
     historyApiFallback: {
@@ -278,6 +281,7 @@ const clientConfig = function webpackConfig(): WebpackConfig {
   config.resolve = {
     extensions: ['.ts', '.js', '.json'],
     alias: {
+      // Alias is really only for JavaScript and TypeScript code.
       "@app": root("src/@app"),
       "@mock": root("src/@mock"),
     }

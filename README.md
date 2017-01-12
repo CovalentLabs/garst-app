@@ -10,6 +10,78 @@ just in case there are some performance improvements or updates to things to mak
 git remote add upstream https://github.com/qdouble/angular-webpack2-starter.git
 ```
 
+## Developing
+
+```bash
+# 1. change directory to the app
+cd garst-app
+
+# Get dependencies
+npm install
+
+```
+
+### Developing with Styleguide
+
+The `src/@styleguide` portion of the app is intended for testing and developing features
+quickly outside the scope of the core source code.
+
+It's features are limited to 
+
+Simple webpack-dev-server: `npm run style:webdev`,
+
+Webpack-dev-server with hot module reloading: `npm run style:webdev:hmr`, and 
+
+Compiling: `npm run style:compile`
+
+After compiling, your code will be put into `www`, and you can deploy normally with `npm run deploy`.
+
+### Developing App
+
+The `src/@app` portion of the codebase contains the core app configuration. Please use
+the following commands to do developing `npm run webdev`, `npm run webdev:hmr`, and `npm run compile`.
+
+These commands are described in further detail below.
+
+Then follow the next section to figure deploying to device.
+
+## Deploy to device
+
+Set up your computer with `cordova` and the JDK and Android SDK for deploying to Android.
+https://cordova.apache.org/docs/en/latest/guide/platforms/android/
+
+```bash
+# 1. change directory to the app
+cd garst-app
+
+# Get dependencies
+npm install
+
+# 2. Must have this directory available in order to use cordova!
+mkdir www
+
+# 3. add cordova platform android or ios
+cordova platform add android
+
+# 4. build and deploy files with cordova
+# Standard App build, or
+npm run compile
+# Styleguide App build
+npm run style:compile
+
+# 5. Deploy to Android
+npm run deploy
+
+# ensure adb is running with devices connected
+adb devices
+
+# deploy to cordova either emulator or connected device
+# if this command fails, try deleting the platforms directory and re-initializing the android platform
+cordova platform add android
+```
+
+> The following was included information from the boilerplate starter that this is based off of.
+
 # Complete starter seed project for Angular 2
 
 ## Minimal Branch

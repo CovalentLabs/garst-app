@@ -16,6 +16,9 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr'
 
 import { Component } from '@angular/core'
 
+// Triggers generation of global styles.
+import '../@styles/global.scss';
+
 @Component({
   selector: 'pw-app', // <pw-app></pw-app>
   template: `

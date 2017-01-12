@@ -95,7 +95,7 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
 
   ngAfterContentInit() {
     // Clear console on destruction
-    if ('clear' in console) { console.clear() }
+    // if ('clear' in console) { console.clear() }
 
     // only once.
     this.setup(this.isRow() ? SwipeOrientation.ROW : SwipeOrientation.COLUMN)

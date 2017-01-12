@@ -8,12 +8,12 @@
       "platforms/": true,
       "plugins/": true,
       "dll/": true,
-      "src/app/**/*.css": true,
+      "src/**/*.css": true,
       "www/": true
     },
     "files.exclude": {
       ".awcache/": true,
-      "src/app/**/*.css": true,
+      "src/**/*.css": true,
       "**/node_modules": true,
       "**/.git": true,
       "**/.svn": true,

@@ -10,36 +10,26 @@
       "static-before-instance",
       "variables-before-functions"
     ],
-    "no-any": false,
-    "no-inferrable-types": false,
-    "no-internal-module": true,
-    "no-var-requires": false,
-    "typedef": false,
-    "typedef-whitespace": [
+    "class-name": true,
+    "comment-format": [
       true,
-      {
-        "call-signature": "nospace",
-        "index-signature": "nospace",
-        "parameter": "nospace",
-        "property-declaration": "nospace",
-        "variable-declaration": "nospace"
-      },
-      {
-        "call-signature": "space",
-        "index-signature": "space",
-        "parameter": "space",
-        "property-declaration": "space",
-        "variable-declaration": "space"
-      }
+      "check-space"
     ],
-
-    "ban": false,
-    "curly": false,
-    "forin": true,
+    "curly": true,
+    "eofline": true,
+    "forin": false,
+    "indent": [
+      true,
+      "spaces"
+    ],
     "label-position": true,
+    "label-undefined": true,
+    "max-line-length": [
+      true,
+      140
+    ],
     "no-arg": true,
     "no-bitwise": true,
-    "no-conditional-assignment": true,
     "no-console": [
       true,
       "debug",
@@ -50,72 +40,46 @@
     ],
     "no-construct": true,
     "no-debugger": true,
+    "no-duplicate-key": true,
     "no-duplicate-variable": true,
     "no-empty": false,
     "no-eval": true,
-    "no-null-keyword": false,
+    "no-inferrable-types": [ false ],
     "no-shadowed-variable": true,
     "no-string-literal": false,
     "no-switch-case-fall-through": true,
+    "no-trailing-whitespace": true,
     "no-unused-expression": true,
+    "no-unused-variable": true,
+    "no-unreachable": true,
     "no-use-before-declare": true,
     "no-var-keyword": true,
-    "radix": true,
-    "switch-default": true,
-    "triple-equals": [
-      true,
-      "allow-null-check"
-    ],
-
-    "eofline": true,
-    "indent": [
-      true,
-      "spaces"
-    ],
-    "max-line-length": [
-      true,
-      100
-    ],
-    "no-require-imports": false,
-    "no-trailing-whitespace": true,
     "object-literal-sort-keys": false,
-    "trailing-comma": [
-      false,
-      {
-        "multiline": false,
-        "singleline": "never"
-      }
-    ],
-
-    "align": false,
-    "class-name": true,
-    "comment-format": [
-      true,
-      "check-space"
-    ],
-    "interface-name": false,
-    "jsdoc-format": true,
-    "no-consecutive-blank-lines": false,
     "one-line": [
       true,
       "check-open-brace",
       "check-catch",
       "check-else",
-      "check-finally",
       "check-whitespace"
     ],
-    "quotemark": [
-      false,
-      "single",
-      "avoid-escape"
-    ],
-    "semicolon": [false, "always"],
-    "variable-name": [
+    // "quotemark": [ true, "single" ],
+    "radix": true,
+    // "semicolon": [ "always" ],
+    "triple-equals": [
       true,
-      "check-format",
-      "allow-leading-underscore",
-      "ban-keywords"
+      "allow-null-check"
     ],
+    "typedef-whitespace": [
+      true,
+      {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      }
+    ],
+    "variable-name": false,
     "whitespace": [
       true,
       "check-branch",
@@ -124,19 +88,48 @@
       "check-separator",
       "check-type"
     ],
-    "directive-selector": [true, "attribute", [], "camelCase"],
-    "component-selector": [true, "element", [], "kebab-case"],
+    "ban": false,
+    "no-conditional-assignment": true,
+    "switch-default": true,
+    "no-require-imports": false,
+    "trailing-comma": [
+      false,
+      {
+        "multiline": false,
+        "singleline": "never"
+      }
+    ],
+
+    "align": [ false ],
+    "interface-name": [false],
+    "jsdoc-format": true,
+    "no-consecutive-blank-lines": [false],
+    "quotemark": [
+      false,
+      "single",
+      "avoid-escape"
+    ],
+    "semicolon": [false, "always"],
+    "directive-selector-name": [true, "camelCase"],
+    "component-selector-name": [true, "kebab-case"],
+    "directive-selector-type": [true, "attribute"],
+    "component-selector-type": [true, "element"],
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,
-    "no-attribute-parameter-decorator": true,
-    "no-input-rename": true,
-    "no-output-rename": true,
-    "no-forward-ref": true,
+    "no-input-rename": false,
+    "no-output-rename": false,
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
+    "component-class-suffix": true,
+    "directive-class-suffix": true,
+    "directive-selector-prefix": [true, "pw"],
+    "component-selector-prefix": [true, "pw"],
+    "pipe-naming": [true, "camelCase", "pw"],
+    "directive-selector": [true, "attribute", [], "camelCase"],
+    "component-selector": [true, "element", [], "kebab-case"],
+    "no-forward-ref": true,
     "import-destructuring-spacing": true,
-    "pipe-naming": [true, "camelCase"],
     "no-access-missing-member": true,
     "templates-use-public": true,
     "invoke-injectable": true

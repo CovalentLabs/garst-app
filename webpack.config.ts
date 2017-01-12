@@ -27,7 +27,7 @@ const { CheckerPlugin } = require('awesome-typescript-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const WebpackMd5Hash = require('webpack-md5-hash');
 
 const { hasProcessFlag, root, testDll } = require('./helpers.js');
@@ -182,9 +182,10 @@ const clientConfig = function webpackConfig(): WebpackConfig {
       ...MY_CLIENT_PRODUCTION_PLUGINS,
     );
     if (!E2E && !WATCH) {
-      config.plugins.push(
-        new BundleAnalyzerPlugin({analyzerPort: 5000})
-      );
+      // Removing, as for whatever reason, this plugin's webpage freezes on Mac OSX.
+      // config.plugins.push(
+      //   new BundleAnalyzerPlugin({analyzerPort: 5000})
+      // );
     }
   }
 

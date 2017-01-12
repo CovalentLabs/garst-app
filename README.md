@@ -1,3 +1,11 @@
+# Garst app
+
+This is a new repository for Project-W to live in, as the previous repo was unequipped to use Ahead-of-Time compilation.
+
+In addition, the dependencies that we were using, have been becoming out of date.
+We hope to stay in sync with the upstream of this repo: https://github.com/qdouble/angular-webpack2-starter/tree/minimal
+just in case there are some performance improvements or updates to things to make our lives easier.
+
 # Complete starter seed project for Angular 2
 
 ## Minimal Branch

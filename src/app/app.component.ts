@@ -1,6 +1,6 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core'
 
-import { views } from './app-nav-views';
+import { views } from './app-nav-views'
 
 @Component({
   selector: 'my-app',
@@ -15,13 +15,13 @@ export class AppComponent {
 
   activateEvent(event) {
     if (ENV === 'development') {
-      console.log('Activate Event:', event);
+      console.log('Activate Event:', event)
     }
   }
 
   deactivateEvent(event) {
     if (ENV === 'development') {
-      console.log('Deactivate Event', event);
+      console.log('Deactivate Event', event)
     }
   }
 }

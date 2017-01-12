@@ -43,6 +43,8 @@ yarn start
 
 Use `yarn start` for dev server. Default dev port is `3000`.
 
+Use `yarn run start:hmr` to run dev server in HMR mode.
+
 Use `yarn run build` for production build.
 
 Use `yarn run server:prod` for production server and production watch. Default production port is `8088`.
@@ -53,6 +55,12 @@ To create AOT version, run `yarn run compile`. This will compile and build scrip
 Then you can use `yarn run prodserver` to see to serve files.
 Do not use build:aot directly unless you have already compiled.
 Use `yarn run compile` instead, it compiles and builds:aot
+
+### HMR (Hot Module Replacement)
+
+HMR mode allows you to update a particular module without reloading the entire application.
+The current state of your app is also stored in @ngrx/store allowing you to make updates to
+your code without losing your currently stored state.
 
 ### AOT  Don'ts
 

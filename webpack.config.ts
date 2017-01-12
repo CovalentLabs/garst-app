@@ -21,6 +21,7 @@ const {
   NoErrorsPlugin
 } = require('webpack');
 
+const CompressionPlugin = require('compression-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CheckerPlugin } = require('awesome-typescript-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -36,6 +37,7 @@ const AOT = EVENT.includes('aot');
 const DEV_SERVER = EVENT.includes('webdev');
 const DLL = EVENT.includes('dll');
 const E2E = EVENT.includes('e2e');
+const HMR = hasProcessFlag('hot');
 const PROD = EVENT.includes('prod');
 const WATCH = hasProcessFlag('watch');
 
@@ -58,6 +60,7 @@ if (DEV_SERVER) {
 const CONSTANTS = {
   AOT: AOT,
   ENV: PROD ? JSON.stringify('production') : JSON.stringify('development'),
+  HMR: HMR,
   HOST: JSON.stringify(HOST),
   PORT: PORT
 };
@@ -77,6 +80,11 @@ const DLL_VENDORS = [
 
 const COPY_FOLDERS = [
   { from: 'src/assets', to: 'assets' },
+  // TODO Figure out if we can use/need jQuery global
+  { from: 'node_modules/hammerjs/hammer.min.js' },
+  { from: 'node_modules/hammerjs/hammer.min.js.map' },
+  // { from: 'src/app/main.css' }, // TODO figure out if this is global styles...
+  // { from: 'src/app/styles.css' },
   ...MY_COPY_FOLDERS
 ];
 
@@ -99,6 +107,7 @@ const clientConfig = function webpackConfig(): WebpackConfig {
       {
         test: /\.ts$/,
         loaders: [
+          '@angularclass/hmr-loader',
           'awesome-typescript-loader?{configFileName: "tsconfig.webpack.json"}',
           'angular2-template-loader',
           'angular-router-loader?loader=system&genDir=compiled&aot=' + AOT
@@ -163,6 +172,13 @@ const clientConfig = function webpackConfig(): WebpackConfig {
         beautify: false,
         comments: false
       }),
+      new CompressionPlugin({
+        asset: '[path].gz[query]',
+        algorithm: 'gzip',
+        test: /\.js$|\.html$/,
+        threshold: 10240,
+        minRatio: 0.8
+      }),
       ...MY_CLIENT_PRODUCTION_PLUGINS,
     );
     if (!E2E && !WATCH) {
@@ -180,6 +196,7 @@ const clientConfig = function webpackConfig(): WebpackConfig {
       app_assets: ['./src/main.browser'],
       polyfill: [
         'sockjs-client',
+        '@angularclass/hmr',
         'ts-helpers',
         'zone.js',
         'core-js/client/shim.js',
@@ -263,6 +280,8 @@ const clientConfig = function webpackConfig(): WebpackConfig {
   return config;
 
 } ();
+
+// serverConfig? https://github.com/qdouble/angular-webpack2-starter/blob/5a8acbf6592dd634b571e2b1259f8255386fe86d/webpack.config.ts#L316
 
 DLL ? console.log('BUILDING DLLs') : console.log('BUILDING APP');
 module.exports = clientConfig;

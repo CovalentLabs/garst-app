@@ -1,4 +1,4 @@
-/* tslint:disable:member-ordering */
+/* tslint:disable:member-ordering curly */
 
 import { VitreSwipeDetector, SwipeDirection } from './vitre-swipe-detector'
 
@@ -14,7 +14,7 @@ export class VitreSwipeManager {
   private framesLength: number
   private frameWidth: number
   private detector: VitreSwipeDetector
-  private translateContent = function (dist: number){}
+  private contentTranslator: ContentTranslator
   // Configurable
   public onSwiping = function (isSwiping: boolean) {}
 
@@ -28,7 +28,16 @@ export class VitreSwipeManager {
       ) {
     let isX = this.orientation === SwipeOrientation.ROW
     this.detector = new VitreSwipeDetector(container, isX)
-    this.translateContent = createTranslateContent(content, isX)
+
+    // Whenever the content stops transitioning, assume that this is the end of a swipe
+    // There isn't too much of an issue to be wrong.
+    $(this.content).on('transitionend', (event) => {
+      if (!this.isSwiping && event.target.isSameNode(this.content)) {
+        this.onSwiping(false)
+      }
+    })
+
+    this.contentTranslator = new ContentTranslator(content, isX)
     this.resize()
     this.listen()
   }
@@ -52,8 +61,8 @@ export class VitreSwipeManager {
       // Revert back to using css transition
       this.content.style.transition = null
 
-      const time = 1000
-      const travel = velocity * time
+      // const time = 1000
+      const travel = velocity * 1000
       const travel300 = velocity * 300
       if (currentDirection === SwipeDirection.START) {
         // FORWARD
@@ -62,10 +71,10 @@ export class VitreSwipeManager {
         const moveFore = this.delta + travel300 < moveForeGoal
         if (moveFore) {
           // See how far this would travel with avg velocity
-          // const goalDist = -1 * width - this.delta
+          const goalDist = -1 * width - this.delta
           // Set transitions?
-          // let dur = `${calcTransitionDur(goalDist, travel)}s`
-          // this.content.style.transitionDuration = dur
+          let dur = `${calcTransitionDur(goalDist, travel)}s`
+          this.content.style.transitionDuration = dur
           // console.log("Transdur", dur)
           setTimeout(() => this.setIndex(this.frameIndex + 1), 0)
         }
@@ -76,10 +85,10 @@ export class VitreSwipeManager {
         const moveBack = this.delta + travel300 > moveBackGoal
         if (moveBack) {
           // See how far this would travel with avg velocity
-          // const goalDist = this.delta - width
+          const goalDist = this.delta - width
           // Set transitions based on velocity?
-          // let dur = `${calcTransitionDur(goalDist, travel)}s`
-          // this.content.style.transitionDuration = dur
+          let dur = `${calcTransitionDur(goalDist, travel)}s`
+          this.content.style.transitionDuration = dur
           // console.log("Transdur", dur)
           setTimeout(() => this.setIndex(this.frameIndex - 1), 0)
         }
@@ -87,8 +96,6 @@ export class VitreSwipeManager {
       // console.log("put back", { width, delta: this.delta, index: this.frameIndex })
       // console.log({origin, delta: this.delta })
       this.isSwiping = false
-      console.log("%cStop swiping", 'color: blue, font-weight: bold; font-size: 24px;')
-      this.onSwiping(false)
       this.detector.moveSwipe = VitreSwipeManager.NOOP
       this.detector.endSwipe = VitreSwipeManager.NOOP
 
@@ -108,39 +115,36 @@ export class VitreSwipeManager {
     this.detector.startSwipe = (input) => {
       origin = input.origin
       currentDirection = input.direction
-      console.log("Swipe Direction: ", SwipeDirection[currentDirection])
       if (currentDirection === SwipeDirection.START) {
         if (this.canGoForward()) {
-          console.log("Can Move Forward")
           this.setTranslateBounds(true, false)
           this.isSwiping = true
         } else {
-          console.log("Cannot Move Forward")
           this.isSwiping = false
         }
 
       } else if (currentDirection === SwipeDirection.END) {
         if (this.canGoBackward()) {
-          console.log("Can Move Backward")
           this.setTranslateBounds(false, true)
           this.isSwiping = true
         } else {
-          console.log("Cannot Move Backward")
           this.isSwiping = false
         }
       }
       if (this.isSwiping) {
+        // trigger our events on move and on end
         this.detector.moveSwipe = move
         this.detector.endSwipe = end
+
         this.content.style.transition = 'none'
+        this.onSwiping(true)
+
         move(input.delta)
+
       } else {
         this.detector.moveSwipe = VitreSwipeManager.NOOP
         this.detector.endSwipe = VitreSwipeManager.NOOP
       }
-      console.log("%cSwiping?", 'color: blue; font-weight: bold; font-size: 24px;'
-        , this.isSwiping)
-      this.onSwiping(this.isSwiping)
     }
     this.detector.moveSwipe = VitreSwipeManager.NOOP
     this.detector.endSwipe = VitreSwipeManager.NOOP
@@ -159,9 +163,6 @@ export class VitreSwipeManager {
     this.setSize(size)
 
     this.setIndex()
-
-    // just in case
-    this.detector.resize()
   }
 
   public gotoFrame(index: number) {
@@ -190,6 +191,9 @@ export class VitreSwipeManager {
 
   // recalibrate's min and max
   private setIndex(frameIndex: number = this.frameIndex) {
+    // Indicate swiping when transitioning here.
+    this.onSwiping(true)
+
     if (frameIndex == null) {
       frameIndex = 0
     }
@@ -229,31 +233,26 @@ export class VitreSwipeManager {
 
   private setTranslateBounds(canSwipeForward: boolean, canSwipeBackward: boolean) {
     // Set translateMin and translateMax
+
     // set max to frame width
-    this.translateMax = canSwipeBackward
-        ? this.frameWidth
-        : 0
+    if (canSwipeBackward) this.translateMax = this.frameWidth
+    else this.translateMax = 0
 
     // set min to negative frame width
-    this.translateMin = canSwipeForward
-        ? -1 * this.frameWidth
-        : 0
-
-    // console.log({ canSwipeForward, canSwipeBackward, max: this.translateMax, min: this.translateMin })
+    if (canSwipeForward) this.translateMin = -1 * this.frameWidth
+    else this.translateMin = 0
   }
 
   private translateFromIndex(delta: number = 0) {
     // set location of container
-    delta = delta < this.translateMin
-      ? this.translateMin
-      : delta > this.translateMax
-        ? this.translateMax
-        : delta
+    if (delta > this.translateMax) delta = this.translateMax
+    else if (delta < this.translateMin) delta = this.translateMin
 
-    this.translateContent(this.translateZero + delta)
+    this.contentTranslator.translate(this.translateZero + delta)
   }
 }
-
+// the calc transition duration was used to help calculate how fast the transition
+// should be with a final velocity.
 // ensures that we don't jerk too much
 const maxPixelsPerSecond = 1000
 // ensures that we don't jerk too much
@@ -263,31 +262,31 @@ const minPixelsPerSecond = 500
 const easeStartAdjust = 1.2
 function calcTransitionDur(dist, pxPerSecond) {
   pxPerSecond = Math.abs(pxPerSecond)
-  pxPerSecond =
-    pxPerSecond > maxPixelsPerSecond
-      ? maxPixelsPerSecond
-      : pxPerSecond < minPixelsPerSecond
-        ? minPixelsPerSecond
-        : pxPerSecond
+
+  if (pxPerSecond > maxPixelsPerSecond) pxPerSecond = maxPixelsPerSecond;
+  if (pxPerSecond < minPixelsPerSecond) pxPerSecond = minPixelsPerSecond;
   return easeStartAdjust * Math.abs(dist) / pxPerSecond
 }
 
-function createTranslateContent(content: HTMLElement, isRow: boolean) {
-  const prefix = `translate${isRow ? 'X' : 'Y'}(`
-  let lastKnownDist = 0
-  let ticking = false
+class ContentTranslator {
+  private prefix: string
+  private lastKnownDist: number = 0
+  private ticking = false
 
-  function update () {
-    ticking = false
-    content.style.transform = prefix + lastKnownDist + 'px)'
+  constructor(private content: HTMLElement, isRow: boolean) {
+    this.prefix = `translate${isRow ? 'X' : 'Y'}(`
   }
 
-  return function translateContent(dist: number) {
-    lastKnownDist = dist
-    if (!ticking) {
-      ticking = true
-      requestAnimationFrame(update)
+  translate(dist: number) {
+    this.lastKnownDist = dist
+    if (!this.ticking) {
+      this.ticking = true
+      requestAnimationFrame(this.update)
     }
   }
-}
 
+  private update = () => {
+    this.ticking = false
+    this.content.style.transform = this.prefix + this.lastKnownDist + 'px)'
+  }
+}

@@ -20,9 +20,9 @@ class VitreSwipeDetector {
   startSwipe: (input: SwipeStartInput) => any
   moveSwipe: (input: SwipeMoveInput) => any
   endSwipe: (input: SwipeEndInput) => any
-  private offsetLeft: number
-  private offsetWidth: number
-  private curtainWidth: number
+  // private offsetLeft: number
+  // private offsetWidth: number
+  // private curtainWidth: number
   private swipeListener: SwipeListener
 
   constructor(
@@ -30,64 +30,43 @@ class VitreSwipeDetector {
       private isX: boolean,
       public curtainWidthPx: number = 100,
       public curtainWidthRatio: number = .5) {
-    let noop = function(_){}
+    const noop = function(_){}
     this.startSwipe = noop
     this.moveSwipe = noop
     this.endSwipe = noop
 
     this.swipeListener = new SwipeListener(host, isX, this)
 
-    this.resize()
+    // this.resize()
   }
 
-  resize() {
-    if (this.isX) {
-      this.offsetLeft = this.host.offsetLeft
-      this.offsetWidth = this.host.offsetWidth
-    } else {
-      this.offsetLeft = this.host.offsetTop
-      this.offsetWidth = this.host.offsetHeight
-    }
+  // resize() {
+    // if (this.isX) {
+    //   this.offsetLeft = this.host.offsetLeft
+    //   this.offsetWidth = this.host.offsetWidth
+    // } else {
+    //   this.offsetLeft = this.host.offsetTop
+    //   this.offsetWidth = this.host.offsetHeight
+    // }
 
-    let maxCurtainWidth = Math.max(this.offsetWidth * this.curtainWidthRatio, this.curtainWidthPx)
+    // let maxCurtainWidth = Math.max(this.offsetWidth * this.curtainWidthRatio, this.curtainWidthPx)
     // ensure our curtains are not too big for our width
-    this.curtainWidth = Math.min(maxCurtainWidth, this.offsetWidth * .5)
-  }
+    // this.curtainWidth = Math.min(maxCurtainWidth, this.offsetWidth * .5)
+  // }
 
-  moveHandler (dX: number) {
-    this.moveSwipe(dX)
-  }
+  // inStartCurtain(ox) {
+  //   let localX = ox - this.offsetLeft
+  //   // console.log({localX})
+  //   return (localX + this.curtainWidth) > this.offsetWidth
+  //       && localX < this.offsetWidth
+  // }
 
-  endHandler (velocity: number) {
-    this.endSwipe(velocity)
-  }
-
-  startHandler(
-      direction: SwipeDirection,
-      origin: number,
-      delta: number
-  ) {
-    // Change direction to emit to
-    this.startSwipe({
-      direction: direction,
-      delta: delta,
-      origin: origin
-    })
-  }
-
-  inStartCurtain(ox) {
-    let localX = ox - this.offsetLeft
-    // console.log({localX})
-    return (localX + this.curtainWidth) > this.offsetWidth
-        && localX < this.offsetWidth
-  }
-
-  inEndCurtain(ox) {
-    let localX = ox - this.offsetLeft
-    // console.log({localX})
-    return 0 < (this.curtainWidth - localX)
-        && localX > 0
-  }
+  // inEndCurtain(ox) {
+  //   let localX = ox - this.offsetLeft
+  //   // console.log({localX})
+  //   return 0 < (this.curtainWidth - localX)
+  //       && localX > 0
+  // }
 
   destroy() {
     // TODO unsubscribe from hammer
@@ -97,8 +76,8 @@ class VitreSwipeDetector {
 type velpass = { o, v, d, a, t }
 class SwipeListener {
   private mc: HammerManager
-  private velocities = [0, 0, 0]
   private angleThreshold: AngleThreshold
+  private velocities = [0, 0, 0]
   // private VELOCITY_THRESHOLD = .1
   private origin = 0
   private isStopped = true
@@ -121,7 +100,7 @@ class SwipeListener {
 
   private onpan({ o, v, d, a, t }: velpass) {
     if (!this.isStopped) {
-      this.detector.moveHandler(d)
+      this.detector.moveSwipe(d)
       this.recordVelocity(v)
     } else {
       if (t === 'panstart') {
@@ -135,7 +114,8 @@ class SwipeListener {
   private setupEndListener() {
     this.isStopped = false
     $(document.body).one('mouseleave touchend mouseup', () => {
-      this.detector.endHandler(avg(this.velocities))
+      // constant velocity for now
+      this.detector.endSwipe(avg(this.velocities))
       this.isStopped = true
     })
   }
@@ -155,17 +135,8 @@ class SwipeListener {
     let direction = this.angleThreshold.check(angle)
     if (direction == null) { this.waitForTouchEnd(); return }
 
-    switch (direction) {
-      case SwipeDirection.START:
-        // if (!this.detector.inStartCurtain(this.origin)) { return }
-        break
-      case SwipeDirection.END:
-        // if (!this.detector.inEndCurtain(this.origin)) { return }
-        break
-    }
-
     this.setupEndListener()
-    this.detector.startHandler(direction, this.origin, delta)
+    this.detector.startSwipe({ direction, origin: this.origin, delta })
   }
 
   waitForTouchEnd() {
@@ -203,9 +174,6 @@ class AngleThreshold {
       : [null, null, SwipeDirection.START, null, null, null, SwipeDirection.END, null, null]
   }
   check = an => {
-    console.log("%cAngle:", 'color: blue; font-weight: bold; font-size: 24px;'
-        , an)
-    // let ang = Math.abs(an)
     let cang = (an + this.degs2 + this.centering) % this.degs
     /* tslint:disable:no-bitwise */
     let lm = (cang * this.rec) | 0

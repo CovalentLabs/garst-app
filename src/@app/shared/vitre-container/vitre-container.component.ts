@@ -147,11 +147,9 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
     const size = this.isRow() ? host.offsetWidth : host.offsetHeight
 
 
-    console.log({ host, size, GRID: GRID_BREAKPOINTS.map(a => a.join('=>')) })
     const breakpoint = GRID_BREAKPOINTS.find(a => a[1] < size)
 
     this.view = breakpoint != null ? breakpoint[0] : 'xs'
-    console.log({ host, size, breakpoint, view: this.view })
   }
 
   private resetFrame(): boolean {

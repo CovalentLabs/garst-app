@@ -148,7 +148,6 @@ class SwipeListener {
 function make_vel(isX: boolean): (ev: HammerInput) => { o, v, d, a, t } {
   return isX
     ? function (ev: HammerInput) {
-      console.log(ev.srcEvent, { dx: ev.deltaX, dy: ev.deltaY })
       return { o: (<PointerEvent>ev.srcEvent).clientX, v: ev.velocityX, d: ev.deltaX, t: ev.type, a: ev.angle }
     }
     : function (ev: HammerInput) {

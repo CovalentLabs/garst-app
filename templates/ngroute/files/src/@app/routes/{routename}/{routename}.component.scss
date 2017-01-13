@@ -1,0 +1,19 @@
+// <%=RouteName%>Component Styles
+<%_ // random color for fun
+ var color = Math.random() _%>
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+:host {
+  display: block;
+  padding: 4px;
+  color: black;
+  background: #<%= color.toString(16).slice(2,8) %>;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 18px;
+}

@@ -60,6 +60,7 @@
     "debug:build": "node-nightly --inspect --debug-brk node_modules/webpack/bin/webpack.js",
     "cordova": "cordova",
     "deploy": "cordova run android",
+    "style:compile:deploy": "npm run style:compile:aot && cordova run android",
     "build": "npm run build:prod",
     "build:aot": "npm run build:aot:prod",
     "build:aot:prod": "npm run clean:dist && npm run sass && webpack",

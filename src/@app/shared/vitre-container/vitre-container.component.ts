@@ -79,18 +79,14 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
   private setup(orientation: SwipeOrientation) {
     let container = <HTMLElement> this.host()
     let content = <HTMLElement> this.host().firstElementChild
-    this.swipeManager = new VitreSwipeManager(orientation, container, content)
+    this.swipeManager = new VitreSwipeManager(orientation, container, content, (index) => this.onChangeFrameIndex(index))
 
 
     window.addEventListener('resize', this.onresize)
   }
 
-  onChanges() {
-    this.reset()
-  }
-
   ngOnChanges(changes) {
-    this.onChanges()
+    this.reset()
   }
 
   ngAfterContentInit() {
@@ -108,6 +104,17 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
   ngOnDestroy() {
     // this.swipeManager.destroy()
     // window.removeEventListener('resize', this.onresize)
+  }
+
+  private onChangeFrameIndex(index: number) {
+    this.applyActiveStylesToFrame(index)
+  }
+
+  private applyActiveStylesToFrame(index: number) {
+    this.vitres.forEach(vitre => {
+      let isInFrame = this.vitreNameToFrameIndex[vitre.name] === index
+      vitre.isActive = isInFrame
+    })
   }
 
   private reset() {

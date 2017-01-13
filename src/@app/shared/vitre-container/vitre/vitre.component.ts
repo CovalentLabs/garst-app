@@ -10,9 +10,19 @@ export class VitreComponent {
   @HostBinding('style.width') styleWidth
   @HostBinding('style.height') styleHeight
   @HostBinding('style.touchAction') touchAction = 'none'
+  @HostBinding('style.pointerEvents') stylePointerEvents = 'all'
+  @HostBinding('style.visibility') styleVisibility = 'visible'
   // <vitre [backgroundColor]="">
   @Input() @HostBinding('style.backgroundColor') backgroundColor: string
   @Input('vitre-name') name: string = Math.random().toString(32)
+
+  set isActive(active: boolean) {
+    this.stylePointerEvents = active ? 'all' : 'none'
+  }
+
+  set isVisible(visible: boolean) {
+    this.stylePointerEvents = visible ? 'visible' : 'hidden'
+  }
 
   set width(widthValue: string) {
     this.styleWidth = widthValue

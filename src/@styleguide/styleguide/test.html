@@ -1,56 +1,3 @@
-
-<pw-vitre-container
-    vitre-direction="column"
-    vitre-frame-index="1"
-    class="h-100 w-100 p-absolute"
-    #vit2
-    >
-  <pw-vitre
-      vitre-name="profile"
-      vitre-row="12"
-      >
-    <div class="window h-100
-          d-flex flex-column align-content-stretch">
-      <pw-panel-header
-          title="Profile"
-          subtitle="This is you">
-      </pw-panel-header>
-      <div class="px-2">
-        <pw-profile-message
-            *ngIf="currGU"
-            [profile]="currGU.Profile"
-            [action]="currGU.Profile.Tagline"
-            >
-        </pw-profile-message>
-      </div>
-      <div pw-shadow-scroller class="px-2">
-        <div class="touch-action-pan-y">
-          <pw-pod-stack
-              [users]="pod$"
-              (openUser)="currGU = $event"
-              >
-          </pw-pod-stack>
-          <pw-pod-stack
-              [users]="pod1"
-              (openUser)="currGU = $event"
-              >
-          </pw-pod-stack>
-        </div>
-      </div>
-      <div class="container-fluid m-0">
-        <div class="row info-blocks ib-mini" (tap)="vit2.goto('main')">
-          <div class="ib-activity col-6 col-sm-3" (tap)="vit.goto('group')">5 In Group</div>
-          <div class="ib-time col-6 col-sm-3" (tap)="vit.goto('chat')">3 Messages <md-icon>chat</md-icon></div>
-          <div class="ib-place col-12 col-sm-6" (tap)="vit.goto('friends')">12 Friends <md-icon>group</md-icon></div>
-        </div>
-      </div>
-    </div>
-  </pw-vitre>
-
-  <pw-vitre
-      vitre-name="main"
-      vitre-row="12"
-      >
 <pw-vitre-container
     vitre-direction="row"
     vitre-frame-index="1"
@@ -94,7 +41,7 @@
       </div>
       <div class="container-fluid m-0">
         <div class="row info-blocks ib-mini">
-          <div class="ib-activity col-6 col-sm-3" (tap)="vit2.goto('profile')">Lunch</div>
+          <div class="ib-activity col-6 col-sm-3" (tap)="vit.goto('group')">Lunch</div>
           <div class="ib-time col-6 col-sm-3" (tap)="vit.goto('group')">11:15am <md-icon>mode_edit</md-icon></div>
           <div class="ib-place col-12 col-sm-6" (tap)="vit.goto('chat')">Garst Dining Hall <md-icon>place</md-icon></div>
         </div>
@@ -187,10 +134,3 @@
     </div>
   </pw-vitre>
 </pw-vitre-container>
-  </pw-vitre>
-</pw-vitre-container>
-<!-- hidden for a moment -->
-
-<!-- hidden for a moment -->
-
-<!-- hidden for a moment -->

@@ -2,7 +2,8 @@
 import {
   Component,
   AfterContentInit, OnChanges, OnDestroy,
-  ElementRef,
+  ElementRef, HostBinding,
+  ChangeDetectorRef,
   Input, ContentChildren, QueryList, ViewEncapsulation
 } from '@angular/core'
 
@@ -44,6 +45,7 @@ const GRID_BREAKPOINTS =
   let [name, px] = b.split(':')
   return [<ViewType> name, parseFloat(px)]
 })
+.reverse()
 
 @Component({
   selector: 'pw-vitre-container',
@@ -55,9 +57,13 @@ const GRID_BREAKPOINTS =
 })
 export class VitreContainerComponent implements AfterContentInit, OnChanges, OnDestroy {
   @ContentChildren(VitreComponent) vitres: QueryList<VitreComponent>
-  @Input('vitre-view') view: null | ViewType = null
-  @Input('vitre-direction') direction: null | 'row' | 'column' = null
+  @HostBinding('attr.vitre-view') get attrView(): ViewType { return this.view }
+  @Input('vitre-direction') direction: 'row' | 'column' = null
   @Input('vitre-frame-index') frameIndexAttr: string
+
+  private view: ViewType;
+  private $host: JQuery
+  private set isSwiping(swiping: boolean) { this.$host.toggleClass("vitre-swiping", swiping) }
 
   // <vitre-container [curtainSize]="">
   // TODO connect manager to listener for these curtains
@@ -75,12 +81,14 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
       this.resizeDebounceInterval
     )
   }
-  constructor(private _ref: ElementRef) {}
+  constructor(private _ref: ElementRef, private _changes: ChangeDetectorRef) {}
   private setup(orientation: SwipeOrientation) {
+    this.$host = $(this.host())
     let container = <HTMLElement> this.host()
     let content = <HTMLElement> this.host().firstElementChild
     this.swipeManager = new VitreSwipeManager(orientation, container, content, (index) => this.onChangeFrameIndex(index))
 
+    this.swipeManager.onSwiping = (swiping) => this.isSwiping = swiping
 
     window.addEventListener('resize', this.onresize)
   }
@@ -129,7 +137,7 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
 
     this.swipeManager.resize()
 
-    this.setAttrs()
+    this._changes.detectChanges()
   }
 
   private recalcView() {
@@ -139,11 +147,11 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
     const size = this.isRow() ? host.offsetWidth : host.offsetHeight
 
 
-    // console.log({ size, GRID: GRID_BREAKPOINTS.map(a => a.join('=>')) })
-    const breakpoint = GRID_BREAKPOINTS.reverse().find(a => a[1] < size)
+    console.log({ host, size, GRID: GRID_BREAKPOINTS.map(a => a.join('=>')) })
+    const breakpoint = GRID_BREAKPOINTS.find(a => a[1] < size)
 
     this.view = breakpoint != null ? breakpoint[0] : 'xs'
-    this.attr('vitre-view', this.view)
+    console.log({ host, size, breakpoint, view: this.view })
   }
 
   private resetFrame(): boolean {
@@ -210,24 +218,12 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
     return true
   }
 
-  private setAttrs() {
-    this.attr('vitre-direction', this.direction || 'row')
-  }
-
   private host(): HTMLElement {
     return this._ref.nativeElement
   }
 
   private isRow(): boolean {
     return this.direction !== 'column'
-  }
-
-  private attr(key: string, value: any) {
-    let el = this.host()
-
-    return value == null
-        ? el.removeAttribute(key)
-        : el.setAttribute(key, '' + value)
   }
 }
 

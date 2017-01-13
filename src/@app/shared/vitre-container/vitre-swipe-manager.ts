@@ -15,6 +15,8 @@ export class VitreSwipeManager {
   private frameWidth: number
   private detector: VitreSwipeDetector
   private translateContent = function (dist: number){}
+  // Configurable
+  public onSwiping = function (isSwiping: boolean) {}
 
   // <vitre-container (open)="">
   // @Output() open = new EventEmitter()
@@ -32,7 +34,7 @@ export class VitreSwipeManager {
   }
 
   private delta: number
-  private isStopped = true
+  private isSwiping = false
   private static NOOP = function (arg) {}
   private listen() {
     let origin = 0
@@ -60,13 +62,12 @@ export class VitreSwipeManager {
         const moveFore = this.delta + travel300 < moveForeGoal
         if (moveFore) {
           // See how far this would travel with avg velocity
-          const goalDist = -1 * width - this.delta
+          // const goalDist = -1 * width - this.delta
           // Set transitions?
           // let dur = `${calcTransitionDur(goalDist, travel)}s`
           // this.content.style.transitionDuration = dur
           // console.log("Transdur", dur)
-          this.setIndex(this.frameIndex + 1)
-          console.log("forward", this.frameIndex, {goalDist, travel})
+          setTimeout(() => this.setIndex(this.frameIndex + 1), 0)
         }
       } else {
         // BACKWARD
@@ -75,18 +76,19 @@ export class VitreSwipeManager {
         const moveBack = this.delta + travel300 > moveBackGoal
         if (moveBack) {
           // See how far this would travel with avg velocity
-          const goalDist = this.delta - width
+          // const goalDist = this.delta - width
           // Set transitions based on velocity?
           // let dur = `${calcTransitionDur(goalDist, travel)}s`
           // this.content.style.transitionDuration = dur
           // console.log("Transdur", dur)
-          this.setIndex(this.frameIndex - 1)
-          console.log("backward", this.frameIndex, {goalDist, travel})
+          setTimeout(() => this.setIndex(this.frameIndex - 1), 0)
         }
       }
-      console.log("put back", { width, delta: this.delta, index: this.frameIndex })
-      console.log({origin, delta: this.delta })
-      this.isStopped = true
+      // console.log("put back", { width, delta: this.delta, index: this.frameIndex })
+      // console.log({origin, delta: this.delta })
+      this.isSwiping = false
+      console.log("%cStop swiping", 'color: blue, font-weight: bold; font-size: 24px;')
+      this.onSwiping(false)
       this.detector.moveSwipe = VitreSwipeManager.NOOP
       this.detector.endSwipe = VitreSwipeManager.NOOP
 
@@ -106,36 +108,39 @@ export class VitreSwipeManager {
     this.detector.startSwipe = (input) => {
       origin = input.origin
       currentDirection = input.direction
+      console.log("Swipe Direction: ", SwipeDirection[currentDirection])
       if (currentDirection === SwipeDirection.START) {
         if (this.canGoForward()) {
           console.log("Can Move Forward")
           this.setTranslateBounds(true, false)
-          this.isStopped = false
+          this.isSwiping = true
         } else {
           console.log("Cannot Move Forward")
-          this.isStopped = true
+          this.isSwiping = false
         }
 
       } else if (currentDirection === SwipeDirection.END) {
         if (this.canGoBackward()) {
           console.log("Can Move Backward")
           this.setTranslateBounds(false, true)
-          this.isStopped = false
+          this.isSwiping = true
         } else {
           console.log("Cannot Move Backward")
-          this.isStopped = true
+          this.isSwiping = false
         }
       }
-      if (!this.isStopped) {
+      if (this.isSwiping) {
         this.detector.moveSwipe = move
         this.detector.endSwipe = end
-        console.log("Notrans")
         this.content.style.transition = 'none'
         move(input.delta)
       } else {
         this.detector.moveSwipe = VitreSwipeManager.NOOP
         this.detector.endSwipe = VitreSwipeManager.NOOP
       }
+      console.log("%cSwiping?", 'color: blue; font-weight: bold; font-size: 24px;'
+        , this.isSwiping)
+      this.onSwiping(this.isSwiping)
     }
     this.detector.moveSwipe = VitreSwipeManager.NOOP
     this.detector.endSwipe = VitreSwipeManager.NOOP
@@ -211,7 +216,7 @@ export class VitreSwipeManager {
     // no additional arg resets it to 0
     this.translateFromIndex()
 
-    console.log('setIndex', { zero: this.translateZero, frameIndex, len: this.framesLength })
+    // console.log('setIndex', { zero: this.translateZero, frameIndex, len: this.framesLength })
   }
 
   private canGoForward(): boolean {
@@ -234,7 +239,7 @@ export class VitreSwipeManager {
         ? -1 * this.frameWidth
         : 0
 
-    console.log({ canSwipeForward, canSwipeBackward, max: this.translateMax, min: this.translateMin })
+    // console.log({ canSwipeForward, canSwipeBackward, max: this.translateMax, min: this.translateMin })
   }
 
   private translateFromIndex(delta: number = 0) {
@@ -245,7 +250,6 @@ export class VitreSwipeManager {
         ? this.translateMax
         : delta
 
-    console.log({translateFromIndex: this.translateZero, delta})
     this.translateContent(this.translateZero + delta)
   }
 }

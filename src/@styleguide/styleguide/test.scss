@@ -1,6 +1,24 @@
 
 @import 'bootstrap/custom';
 
+$vitre-divider-width: $spacer-x * .5;
+pw-vitre-container {
+  pw-vitre:not(:first-child) > div::after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    transition: opacity .1s;
+    border-right: $vitre-divider-width solid $brand-primary;
+    margin-left: -.5 * $vitre-divider-width;
+    opacity: 0;
+  }
+}
+pw-vitre-container.vitre-swiping {
+  pw-vitre > div::after {
+    opacity: 1;
+  }
+}
+
 .test-elt {
   position: absolute;
   z-index: 2;

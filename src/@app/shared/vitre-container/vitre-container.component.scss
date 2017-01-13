@@ -10,6 +10,25 @@ pw-vitre-container {
   display: block;
   position: relative;
 
+  > .vitre-drawers {
+    position: absolute;
+    z-index: 500;
+    height: 100%;
+    width: 100%;
+
+    > pw-vitre-drawer {
+      display: block;
+      position: absolute;
+      transition:
+        height .2s cubic-bezier(0.55, 0.085, 0.68, 0.53),
+        width .2s cubic-bezier(0.55, 0.085, 0.68, 0.53),
+        transform .5s ease-out;
+
+      // debug
+      opacity: .6;
+    }
+  }
+
   > .vitre-container-content {
     display: flex;
     transition:
@@ -27,23 +46,6 @@ pw-vitre-container {
 
 $vitre-columns: 12;
 
-@mixin make-col($size, $columns: $vitre-columns) {
-  // flex: 0 0 percentage($size / $columns);
-  width: percentage($size / $columns);
-  // Add a `max-width` to ensure content within each column does not blow out
-  // the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
-  // do not appear to require this.
-  max-width: percentage($size / $columns);
-}
-@mixin make-row($size, $columns: $vitre-columns) {
-  // flex: 0 0 percentage($size / $columns);
-  height: percentage($size / $columns);
-  // Add a `max-width` to ensure content within each column does not blow out
-  // the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
-  // do not appear to require this.
-  max-height: percentage($size / $columns);
-}
-
 //<div class="vitre-container-content">
 //  <ng-content></ng-content>
 //</div>
@@ -54,11 +56,55 @@ pw-vitre-container[vitre-direction=row] {
     flex-direction: row;
     height: 100%;
   }
+  > .vitre-drawers {
+    top: 0;
+    > pw-vitre-drawer {
+      transform: translateX(0);
+      height: 100%;
+    }
+  }
+  > .vitre-drawers-start {
+    // row
+    right: 100%;
+    > pw-vitre-drawer {
+      right: 0;
+    }
+  }
+
+  > .vitre-drawers-end {
+    // row
+    left: 100%;
+    > pw-vitre-drawer {
+      left: 0;
+    }
+  }
 }
 
 pw-vitre-container[vitre-direction=column] {
   > .vitre-container-content {
     flex-direction: column;
     width: 100%;
+  }
+  > .vitre-drawers {
+    left: 0;
+    > pw-vitre-drawer {
+      transform: translateY(0);
+      width: 100%;
+    }
+  }
+  > .vitre-drawers-start {
+    // column
+    bottom: 100%;
+    > pw-vitre-drawer {
+      bottom: 0;
+    }
+  }
+
+  > .vitre-drawers-end {
+    // column
+    top: 100%;
+    > pw-vitre-drawer {
+      top: 0;
+    }
   }
 }

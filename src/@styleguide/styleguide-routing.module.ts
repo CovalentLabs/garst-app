@@ -21,8 +21,8 @@ const routes: Routes = [
     component: ParentComponent,
     children: sroutes
   },
-  { path: '', pathMatch: 'full', redirectTo: 'styleguide/test' },
-  { path: '**', pathMatch: 'full', redirectTo: 'styleguide/test' }
+  { path: '', pathMatch: 'full', redirectTo: 'styleguide/vitre' },
+  { path: '**', pathMatch: 'full', redirectTo: 'styleguide/vitre' }
 ]
 
 @NgModule({

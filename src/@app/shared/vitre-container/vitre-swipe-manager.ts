@@ -9,22 +9,37 @@ export enum SwipeOrientation {
 import { VitreComponent } from './vitre/vitre.component'
 export { VitreComponent }
 
+export function debug(...args) {
+  let prefix = 'debug'
+  if (args[0] && typeof args[0] === 'string') {
+    prefix = args[0]
+    args = args.slice(1)
+  }
+  console.log('%c' + prefix, 'font-weight: bold; color: green;', ...args)
+}
+
 export class VitreSwipeManager {
   private frameIndex: number
   private framesLength: number
   private frameWidth: number
   private detector: VitreSwipeDetector
   private contentTranslator: ContentTranslator
+  private drawerBackwardTranslator: ContentTranslator
+  private drawerForwardTranslator: ContentTranslator
   // Configurable
   public onSwiping = function (isSwiping: boolean) {}
 
-  // <vitre-container (open)="">
-  // @Output() open = new EventEmitter()
+  // In the future maybe we have named drawers
+  private startDrawersOpen: number = 0
+  private endDrawersOpen: number = 0
   constructor(
       private orientation: SwipeOrientation,
       private container: HTMLElement,
       private content: HTMLElement,
-      private onChangeIndex: (index: number) => void
+      private startDrawers: HTMLElement[],
+      private endDrawers: HTMLElement[],
+      private onChangeIndex: (index: number) => void,
+      private onChangeDrawerIndex: (index: number) => void,
       ) {
     let isX = this.orientation === SwipeOrientation.ROW
     this.detector = new VitreSwipeDetector(container, isX)
@@ -37,14 +52,21 @@ export class VitreSwipeManager {
       }
     })
 
-    this.contentTranslator = new ContentTranslator(content, isX)
+    this.contentTranslator = new ContentTranslator(isX, content)
+    this.drawerBackwardTranslator = new ContentTranslator(isX)
+    this.drawerForwardTranslator = new ContentTranslator(isX)
     this.resize()
     this.listen()
   }
 
   private delta: number
   private isSwiping = false
+  private isOpeningDrawerBackward = false
+  private isOpeningDrawerForward = false
   private static NOOP = function (arg) {}
+  /**
+   * Sets up listeners for the Hammer pans and such.
+   */
   private listen() {
     let origin = 0
     let currentDirection: SwipeDirection = null
@@ -65,37 +87,52 @@ export class VitreSwipeManager {
       const travel = velocity * 1000
       const travel300 = velocity * 300
       if (currentDirection === SwipeDirection.START) {
-        // FORWARD
-        const moveForeGoal = width * -.5
-        // Would it make it to the goal in 300ms?
-        const moveFore = this.delta + travel300 < moveForeGoal
-        if (moveFore) {
-          // See how far this would travel with avg velocity
-          const goalDist = -1 * width - this.delta
-          // Set transitions?
-          let dur = `${calcTransitionDur(goalDist, travel)}s`
-          this.content.style.transitionDuration = dur
-          // console.log("Transdur", dur)
-          setTimeout(() => this.setIndex(this.frameIndex + 1), 0)
+        if (this.isOpeningDrawerForward) {
+          debug("Forth drawer open?")
+        } else {
+          // FORWARD
+          const moveForeGoal = width * -.5
+          // Would it make it to the goal in 300ms?
+          const moveFore = this.delta + travel300 < moveForeGoal
+          if (moveFore) {
+            // See how far this would travel with avg velocity
+            const goalDist = -1 * width - this.delta
+            // Set transitions?
+            let dur = `${calcTransitionDur(goalDist, travel)}s`
+            this.content.style.transitionDuration = dur
+            // console.log("Transdur", dur)
+            setTimeout(() => this.setIndex(this.frameIndex + 1), 0)
+          }
         }
       } else {
-        // BACKWARD
-        const moveBackGoal = width * .5
-        // Would it make it to the goal in 300ms?
-        const moveBack = this.delta + travel300 > moveBackGoal
-        if (moveBack) {
-          // See how far this would travel with avg velocity
-          const goalDist = this.delta - width
-          // Set transitions based on velocity?
-          let dur = `${calcTransitionDur(goalDist, travel)}s`
-          this.content.style.transitionDuration = dur
-          // console.log("Transdur", dur)
-          setTimeout(() => this.setIndex(this.frameIndex - 1), 0)
+        if (this.isOpeningDrawerBackward) {
+          debug("Back drawer open?", { delta: this.delta, width: this.activeTranslateDrawerBackward.offsetWidth * .5 })
+          if (this.delta > this.activeTranslateDrawerBackward.offsetWidth * .5) {
+            this.endDrawersOpen += 1
+          } else {
+            // close drawer
+          }
+        } else {
+          // BACKWARD
+          const moveBackGoal = width * .5
+          // Would it make it to the goal in 300ms?
+          const moveBack = this.delta + travel300 > moveBackGoal
+          if (moveBack) {
+            // See how far this would travel with avg velocity
+            const goalDist = this.delta - width
+            // Set transitions based on velocity?
+            let dur = `${calcTransitionDur(goalDist, travel)}s`
+            this.content.style.transitionDuration = dur
+            // console.log("Transdur", dur)
+            setTimeout(() => this.setIndex(this.frameIndex - 1), 0)
+          }
         }
       }
       // console.log("put back", { width, delta: this.delta, index: this.frameIndex })
       // console.log({origin, delta: this.delta })
       this.isSwiping = false
+      this.isOpeningDrawerBackward = false
+      this.isOpeningDrawerForward = false
       this.detector.moveSwipe = VitreSwipeManager.NOOP
       this.detector.endSwipe = VitreSwipeManager.NOOP
 
@@ -115,23 +152,39 @@ export class VitreSwipeManager {
     this.detector.startSwipe = (input) => {
       origin = input.origin
       currentDirection = input.direction
+
+      this.isSwiping = false
+      this.isOpeningDrawerBackward = false
+      this.isOpeningDrawerForward = false
+
+      debug("startSwipe", input)
+
       if (currentDirection === SwipeDirection.START) {
-        if (this.canGoForward()) {
+        if (this.activateOpenDrawerBackward()) {
+          this.isOpeningDrawerBackward = true
+
+        } else if (this.hasFrameForward()) {
           this.setTranslateBounds(true, false)
           this.isSwiping = true
-        } else {
-          this.isSwiping = false
+
+        } else if (this.activateNextDrawerForward()) {
+          // set the active drawer to the next drawer
+          // funny pun
+          this.isOpeningDrawerForward = true
         }
 
       } else if (currentDirection === SwipeDirection.END) {
-        if (this.canGoBackward()) {
+        if (this.hasFrameBackward()) {
           this.setTranslateBounds(false, true)
           this.isSwiping = true
-        } else {
-          this.isSwiping = false
+
+        } else if (this.activateNextDrawerBackward()) {
+          // set the active drawer to the next drawer
+          // funny pun
+          this.isOpeningDrawerBackward = true
         }
       }
-      if (this.isSwiping) {
+      if (this.isSwiping || this.isOpeningDrawerBackward || this.isOpeningDrawerForward) {
         // trigger our events on move and on end
         this.detector.moveSwipe = move
         this.detector.endSwipe = end
@@ -145,7 +198,9 @@ export class VitreSwipeManager {
         this.detector.moveSwipe = VitreSwipeManager.NOOP
         this.detector.endSwipe = VitreSwipeManager.NOOP
       }
-    }
+    } // end start swipe listener
+
+    // default noop
     this.detector.moveSwipe = VitreSwipeManager.NOOP
     this.detector.endSwipe = VitreSwipeManager.NOOP
   }
@@ -167,10 +222,6 @@ export class VitreSwipeManager {
 
   public gotoFrame(index: number) {
     return this.setIndex(index)
-  }
-
-  public destroy() {
-    this.detector.destroy()
   }
 
   // which frame are we currently viewing
@@ -212,7 +263,7 @@ export class VitreSwipeManager {
 
     this.frameIndex = frameIndex
 
-    this.setTranslateBounds(this.canGoForward(), this.canGoBackward())
+    this.setTranslateBounds(this.hasFrameForward(), this.hasFrameBackward())
 
     this.onChangeIndex(this.frameIndex)
 
@@ -223,11 +274,11 @@ export class VitreSwipeManager {
     // console.log('setIndex', { zero: this.translateZero, frameIndex, len: this.framesLength })
   }
 
-  private canGoForward(): boolean {
+  private hasFrameForward(): boolean {
     return this.frameIndex + 1 < this.framesLength
   }
 
-  private canGoBackward(): boolean {
+  private hasFrameBackward(): boolean {
     return this.frameIndex - 1 >= 0
   }
 
@@ -243,10 +294,89 @@ export class VitreSwipeManager {
     else this.translateMin = 0
   }
 
+  private activeTranslateDrawerBackward: HTMLElement
+  private drawerBackwardTranslateMin: number = 0
+  private drawerBackwardTranslateMax: number = 0
+  private activeTranslateDrawerForward: HTMLElement
+  private drawerForwardTranslateMin: number = 0
+  private drawerForwardTranslateMax: number = 0
+  private setActiveDrawerTranslateBounds(isBack: boolean) {
+    if (isBack) {
+      this.drawerBackwardTranslateMin = 0
+      // TODO if column
+      // TODO if start(backward), likely the opposite of the start
+      if (this.orientation === SwipeOrientation.ROW) {
+        this.drawerBackwardTranslateMax = this.activeTranslateDrawerBackward.offsetWidth
+      } else {
+        this.drawerBackwardTranslateMax = this.activeTranslateDrawerBackward.offsetHeight
+      }
+    } else {
+      this.drawerForwardTranslateMax = 0
+      // TODO if column
+      // TODO if end(forward), likely the opposite of the start
+      if (this.orientation === SwipeOrientation.ROW) {
+        this.drawerForwardTranslateMin = -1 * this.activeTranslateDrawerForward.offsetWidth
+      } else {
+        this.drawerForwardTranslateMin = -1 * this.activeTranslateDrawerForward.offsetHeight
+      }
+    }
+  }
+
+  private activateNextDrawerBackward(): boolean {
+    if (this.startDrawersOpen < this.startDrawers.length) {
+      this.activeTranslateDrawerBackward = this.startDrawers[this.startDrawersOpen]
+      this.drawerBackwardTranslator.setContent(this.activeTranslateDrawerBackward)
+      this.setActiveDrawerTranslateBounds(true)
+      this.translateBackwardZero = 0
+      return true
+    } else {
+      return false
+    }
+  }
+
+  private activateOpenDrawerBackward(): boolean {
+    if (this.startDrawersOpen > 0) {
+      this.activeTranslateDrawerBackward = this.startDrawers[this.startDrawersOpen]
+      this.drawerBackwardTranslator.setContent(this.activeTranslateDrawerBackward)
+      this.setActiveDrawerTranslateBounds(true)
+      this.translateBackwardZero = -1 * this.activeTranslateDrawerBackward.offsetWidth
+      return true
+    } else {
+      return false
+    }
+  }
+
+  private activateNextDrawerForward(): boolean {
+    if (this.endDrawersOpen < this.endDrawers.length) {
+      this.activeTranslateDrawerForward = this.endDrawers[this.endDrawersOpen]
+      this.drawerForwardTranslator.setContent(this.activeTranslateDrawerForward)
+      this.setActiveDrawerTranslateBounds(false)
+      return true
+    } else {
+      return false
+    }
+  }
+
+  private translateBackwardZero = 0
+  private translateForwardZero = 0
   private translateFromIndex(delta: number = 0) {
+    if (this.isOpeningDrawerBackward) {
+      let drawerDelta = delta
+      if (drawerDelta > this.drawerBackwardTranslateMax) drawerDelta = this.drawerBackwardTranslateMax
+      if (drawerDelta < this.drawerBackwardTranslateMin) drawerDelta = this.drawerBackwardTranslateMin
+      this.drawerBackwardTranslator.translate(this.translateBackwardZero + drawerDelta)
+    }
+
+    if (this.isOpeningDrawerForward) {
+      let drawerDelta = delta
+      if (drawerDelta > this.drawerForwardTranslateMax) drawerDelta = this.drawerForwardTranslateMax
+      if (drawerDelta < this.drawerForwardTranslateMin) drawerDelta = this.drawerForwardTranslateMin
+      this.drawerForwardTranslator.translate(this.translateForwardZero + drawerDelta)
+    }
+
     // set location of container
     if (delta > this.translateMax) delta = this.translateMax
-    else if (delta < this.translateMin) delta = this.translateMin
+    if (delta < this.translateMin) delta = this.translateMin
 
     this.contentTranslator.translate(this.translateZero + delta)
   }
@@ -273,9 +403,12 @@ class ContentTranslator {
   private lastKnownDist: number = 0
   private ticking = false
 
-  constructor(private content: HTMLElement, isRow: boolean) {
+  constructor(isRow: boolean, private content: HTMLElement = null) {
     this.prefix = `translate${isRow ? 'X' : 'Y'}(`
   }
+
+  setContent(content: HTMLElement) { this.unsetTransitions(); this.content = content; this.content.style.transition = 'none' }
+  unsetTransitions() { if (this.content != null) this.content.style.transition = null }
 
   translate(dist: number) {
     this.lastKnownDist = dist
@@ -287,6 +420,6 @@ class ContentTranslator {
 
   private update = () => {
     this.ticking = false
-    this.content.style.transform = this.prefix + this.lastKnownDist + 'px)'
+    if (null != this.content) this.content.style.transform = this.prefix + this.lastKnownDist + 'px)'
   }
 }

@@ -11,16 +11,23 @@
     vitre-frame-index="0"
     [attr.vitre-view]="vitreView"
     >
+  <pw-vitre-drawer
+      vitre-position="start"
+      vitre-col="8"
+      vitre-col-sm="6"
+      >
+    You are in my drawer!
+  </pw-vitre-drawer>
   <pw-vitre
       vitre-col="12"
-      vitre-col-md="4"
+      vitre-col-sm="4"
       vitre-col-lg="12"
       >
     Hola 1
   </pw-vitre>
   <pw-vitre
       vitre-col="12"
-      vitre-col-md="8"
+      vitre-col-sm="8"
       vitre-col-lg="12"
       >
     Hola 2
@@ -30,4 +37,11 @@
       >
     Hola 3
   </pw-vitre>
+  <pw-vitre-drawer
+      vitre-position="end"
+      vitre-col="8"
+      vitre-col-sm="6"
+      >
+    You are in my drawer!
+  </pw-vitre-drawer>
 </pw-vitre-container>

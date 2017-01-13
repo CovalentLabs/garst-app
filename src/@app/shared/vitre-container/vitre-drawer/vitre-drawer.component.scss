@@ -1,0 +1,22 @@
+// VitreDrawerComponent Styles
+
+// Gives access to all app wide variables such as for spacing,
+// colors, and typography.
+@import 'bootstrap/custom';
+
+:host {
+  display: block;
+  padding: 4px;
+}
+
+:host[position=left] {
+  .vitre-drawer-container {
+
+  }
+}
+
+:host[position=right] {
+  .vitre-drawer-container {
+
+  }
+}

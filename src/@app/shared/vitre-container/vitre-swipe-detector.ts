@@ -67,10 +67,6 @@ class VitreSwipeDetector {
   //   return 0 < (this.curtainWidth - localX)
   //       && localX > 0
   // }
-
-  destroy() {
-    // TODO unsubscribe from hammer
-  }
 }
 
 type velpass = { o, v, d, a, t }

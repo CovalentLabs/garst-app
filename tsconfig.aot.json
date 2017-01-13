@@ -24,6 +24,7 @@
   "exclude": [
     "node_modules",
     "compiled",
+    "templates",
     "e2e/**/*.ts",
     "src/**/*.spec.ts",
     "src/server.ts"

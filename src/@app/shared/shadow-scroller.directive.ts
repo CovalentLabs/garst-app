@@ -2,6 +2,7 @@
 import { Directive, HostListener, ElementRef, OnDestroy } from '@angular/core'
 
 // Listens for textarea input events
+/* tslint:disable: directive-selector */
 @Directive({
   selector: '[pw-shadow-scroller]'
 })
@@ -25,6 +26,9 @@ export class ShadowScrollerDirective implements OnDestroy {
 // Yay new mapped types 2017-01-10
 type PartialStyleDeclartion = { [K in keyof CSSStyleDeclaration]?: CSSStyleDeclaration[K] }
 const styles: PartialStyleDeclartion = {
+  // Ensuring this container has pan-y, ensures that our scroll will not interfere
+  // with intended touch actions!
+  touchAction: 'pan-y',
   overflowY: 'auto',
   flex: "1",
   transition: 'box-shadow .4s ease-in'

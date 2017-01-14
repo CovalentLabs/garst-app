@@ -25,6 +25,8 @@ import { PodStackComponent } from './pod-stack/pod-stack.component'
 import { ProfileCheckboxComponent } from './profile-checkbox/profile-checkbox.component'
 
 import { AutoGrowDirective } from './auto-grow.directive'
+import { BSWidthDirective } from './bs-width.directive'
+import { SprinkleDirective } from './sprinkle.directive'
 import { ShadowScrollerDirective } from './shadow-scroller.directive'
 
 // import { AwesomePipe }         from './awesome.pipe'
@@ -32,8 +34,8 @@ import { ShadowScrollerDirective } from './shadow-scroller.directive'
 @NgModule({
   imports:      [ CommonModule, MaterialModule ],
   declarations: [
-    CelebrationModalComponent, AutoGrowDirective,
-    ShadowScrollerDirective,
+    CelebrationModalComponent, AutoGrowDirective, BSWidthDirective,
+    ShadowScrollerDirective, SprinkleDirective,
 
     VitreContainerComponent, VitreComponent,
     ProfileAvatarComponent,
@@ -43,8 +45,8 @@ import { ShadowScrollerDirective } from './shadow-scroller.directive'
     ProfileCheckboxComponent,
   ],
   exports:      [
-    CelebrationModalComponent, AutoGrowDirective,
-    ShadowScrollerDirective,
+    CelebrationModalComponent, AutoGrowDirective, BSWidthDirective,
+    ShadowScrollerDirective, SprinkleDirective,
 
     VitreContainerComponent, VitreComponent,
     ProfileAvatarComponent,

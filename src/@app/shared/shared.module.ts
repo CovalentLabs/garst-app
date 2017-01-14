@@ -15,7 +15,7 @@ import { MaterialModule } from '@angular/material'
 // Do not specify app-wide singleton providers in a shared module.
 // A lazy loaded module that imports that shared module will make
 // its own copy of the service.
-import { VitreContainerComponent, VitreDrawerComponent, VitreComponent } from './vitre-container/vitre-container.component'
+import { VitreContainerComponent, VitreLayerComponent, VitreComponent } from './vitre-container/vitre-container.component'
 
 import { CelebrationModalComponent } from './celebration-modal/celebration-modal.component'
 import { ProfileAvatarComponent } from './profile-avatar/profile-avatar.component'
@@ -35,7 +35,7 @@ import { ShadowScrollerDirective } from './shadow-scroller.directive'
     CelebrationModalComponent, AutoGrowDirective,
     ShadowScrollerDirective,
 
-    VitreContainerComponent, VitreDrawerComponent, VitreComponent,
+    VitreContainerComponent, VitreLayerComponent, VitreComponent,
     ProfileAvatarComponent,
     ProfileMessageComponent,
     PanelHeaderComponent,
@@ -46,7 +46,7 @@ import { ShadowScrollerDirective } from './shadow-scroller.directive'
     CelebrationModalComponent, AutoGrowDirective,
     ShadowScrollerDirective,
 
-    VitreContainerComponent, VitreDrawerComponent, VitreComponent,
+    VitreContainerComponent, VitreLayerComponent, VitreComponent,
     ProfileAvatarComponent,
     ProfileMessageComponent,
     PanelHeaderComponent,

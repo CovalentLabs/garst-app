@@ -1,16 +1,20 @@
 <!-- VitreContainerComponent Template -->
-
-<div class="vitre-drawers vitre-drawers-start">
-  <ng-content select="pw-vitre-drawer[vitre-position=start]"></ng-content>
-  <ng-content select="pw-vitre-drawer[vitre-position=left]"></ng-content>
-  <ng-content select="pw-vitre-drawer[vitre-position=top]"></ng-content>
-</div>
-<div class="vitre-container-content">
+<pw-vitre-layer class="vitre-layer" data-vitre-layer="1">
+  <ng-content select="pw-vitre[vitre-layer=1]"></ng-content>
+</pw-vitre-layer>
+<pw-vitre-layer class="vitre-layer" data-vitre-layer="2">
+  <ng-content select="pw-vitre[vitre-layer=2]"></ng-content>
+</pw-vitre-layer>
+<pw-vitre-layer class="vitre-layer" data-vitre-layer="3">
+  <ng-content select="pw-vitre[vitre-layer=3]"></ng-content>
+</pw-vitre-layer>
+<pw-vitre-layer class="vitre-layer" data-vitre-layer="4">
+  <ng-content select="pw-vitre[vitre-layer=4]"></ng-content>
+</pw-vitre-layer>
+<pw-vitre-layer class="vitre-layer" data-vitre-layer="5">
+  <ng-content select="pw-vitre[vitre-layer=5]"></ng-content>
+</pw-vitre-layer>
+<pw-vitre-layer class="vitre-layer" data-vitre-layer="0">
   <ng-content select="pw-vitre"></ng-content>
-</div>
-<div class="vitre-drawers vitre-drawers-end">
-  <ng-content select="pw-vitre-drawer[vitre-position=end]"></ng-content>
-  <ng-content select="pw-vitre-drawer[vitre-position=right]"></ng-content>
-  <ng-content select="pw-vitre-drawer[vitre-position=bottom]"></ng-content>
-</div>
+</pw-vitre-layer>
 <!--<div class="curtains"></div>-->

@@ -15,6 +15,9 @@ export class VitreComponent {
   // <vitre [backgroundColor]="">
   @Input() @HostBinding('style.backgroundColor') backgroundColor: string
   @Input('vitre-name') name: string = Math.random().toString(32)
+  @Input('vitre-role') role: string
+
+  get isDrawer(): boolean { return this.role === 'drawer' }
 
   set isActive(active: boolean) {
     this.stylePointerEvents = active ? 'all' : 'none'

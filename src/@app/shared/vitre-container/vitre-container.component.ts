@@ -2,12 +2,12 @@
 import {
   Component,
   AfterContentInit, OnChanges, OnDestroy,
-  ElementRef, HostBinding,
+  ElementRef, HostBinding, ViewChildren,
   ChangeDetectorRef,
   Input, ContentChildren, QueryList, ViewEncapsulation
 } from '@angular/core'
 
-import { VitreSwipeManager, SwipeOrientation } from './vitre-swipe-manager'
+import { VitreLayerManager, SwipeOrientation } from './vitre-layer-manager'
 
 import { VitreComponent } from './vitre/vitre.component'
 export { VitreComponent }
@@ -62,137 +62,52 @@ const GRID_BREAKPOINTS =
 })
 .reverse()
 
+
+export function debug(...args) {
+  let prefix = 'vitre container'
+  console.log('%c' + prefix, 'font-weight: bold; color: dodgerblue;', ...args)
+}
+
 @Component({
-  selector: 'pw-vitre-container',
-  templateUrl: './vitre-container.component.html',
-  encapsulation: ViewEncapsulation.None,
-  styleUrls: [
-    './vitre-container.component.css',
-  ]
+  selector: 'pw-vitre-layer',
+  template: '<ng-content selector="pw-vitre"></ng-content>'
 })
-export class VitreContainerComponent implements AfterContentInit, OnChanges, OnDestroy {
-  @ContentChildren(VitreComponent) vitres: QueryList<VitreComponent>
-  @ContentChildren(VitreDrawerComponent) vitreDrawers: QueryList<VitreDrawerComponent>
-  @HostBinding('attr.vitre-view') get attrView(): ViewType { return this.view }
+export class VitreLayerComponent implements AfterContentInit {
+  @ViewChildren(VitreComponent) vitres
   @Input('vitre-direction') direction: 'row' | 'column' = null
-  @Input('vitre-frame-index') frameIndexAttr: string
 
   private view: ViewType;
-  private $host: JQuery
-  private set isSwiping(swiping: boolean) { this.$host.toggleClass("vitre-swiping", swiping) }
+  private host: JQuery
+  private vitreResizer: VitreResizerFn
 
-  // <vitre-container [curtainSize]="">
-  // TODO connect manager to listener for these curtains
-  @Input() curtainSize: number = 200
-  private swipeManager: VitreSwipeManager
-  private vitreNameToFrameIndex: { [name: string]: number } = {}
+  setView(view: ViewType) { this.view = view; this.reset() }
 
-  resizeDebounceInterval = 400
-  resizeDebounce: any
-  onresize = () => {
-    clearTimeout(this.resizeDebounce)
-    this.resizeDebounce =
-    setTimeout(
-      () => this.reset(),
-      this.resizeDebounceInterval
-    )
-  }
-  constructor(private _ref: ElementRef, private _changes: ChangeDetectorRef) {}
-  private setup(orientation: SwipeOrientation) {
-    this.$host = $(this.host())
-    let container = <HTMLElement> this.host()
-    let startDrawers = <HTMLElement[]> Array.from(this.host().children.item(0).children)
-    let content = <HTMLElement> this.host().children.item(1)
-    let endDrawers = <HTMLElement[]> Array.from(this.host().children.item(2).children)
-    this.swipeManager = new VitreSwipeManager(
-      orientation,
-      container,
-      content,
-      startDrawers,
-      endDrawers,
-      (index) => this.onChangeFrameIndex(index),
-      (index) => this.onChangeDrawerIndex(index)
-    )
-
-    this.swipeManager.onSwiping = (swiping) => this.isSwiping = swiping
-
-    window.addEventListener('resize', this.onresize)
-  }
-
-  ngOnChanges(changes) {
-    this.reset()
-  }
+  constructor(private _ref: ElementRef) {}
 
   ngAfterContentInit() {
-    // Clear console on destruction
-    // if ('clear' in console) { console.clear() }
-
-    // only once.
-    this.setup(this.isRow() ? SwipeOrientation.ROW : SwipeOrientation.COLUMN)
-
-    this.vitres.forEach((v, i) => v.backgroundColor = AMBER_COLORS[i % AMBER_COLORS_LEN])
-    this.vitreDrawers.forEach((v, i) => v.backgroundColor = CYAN_COLORS[i % CYAN_COLORS_LEN])
-
-    this.reset()
+    this.host = $(this._ref.nativeElement)
+    this.vitres.forEach((v, i) => v.backgroundColor = CYAN_COLORS[i % CYAN_COLORS_LEN])
   }
 
-  ngOnDestroy() {
-    // this.swipeManager.destroy()
-    // window.removeEventListener('resize', this.onresize)
-  }
-
-  private onChangeFrameIndex(index: number) {
-    this.applyActiveStylesToFrame(index)
-  }
-
-  private onChangeDrawerIndex(index: number) {
-    // this.applyActiveStylesToFrame(index)
-    console.log('%conChangeDrawerIndex', 'font-weight: bold;', index)
-  }
-
-  private applyActiveStylesToFrame(index: number) {
-    this.vitres.forEach(vitre => {
-      let isInFrame = this.vitreNameToFrameIndex[vitre.name] === index
-      vitre.isActive = isInFrame
-    })
+  private isRow(): boolean {
+    return this.direction !== 'column'
   }
 
   private reset() {
     this.vitreResizer = createVitreResizer(this.isRow())
-    this.vitreDrawerResizer = createVitreResizer(this.isRow())
 
-    // resize the view (md, sm, lg, xl)
-    // for this new space size.
-    this.recalcView()
-
-    let wasSuccessful = this.resetFrame()
-    if (!wasSuccessful) { return }
-
-    this.swipeManager.resize()
-
-    this._changes.detectChanges()
+    // let wasSuccessful = this.resetFrame()
+    // if (!wasSuccessful) { return }
   }
 
-  private recalcView() {
-    // when direction is column, we use height
-    // when direction is row, we use width
-    const host = this.host()
-    const size = this.isRow() ? host.offsetWidth : host.offsetHeight
-
-
-    const breakpoint = GRID_BREAKPOINTS.find(a => a[1] < size)
-
-    this.view = breakpoint != null ? breakpoint[0] : 'xs'
-  }
-
-  private resetFrame(): boolean {
+  resize() {
     const view = this.view || null
     const vits = this.vitres
     if (vits == null) { return false }
 
     const sizeMapper = this.isRow()
-        ? vit => {  return { vit, size: vit.getCol(view) }}
-        : vit => {  return { vit, size: vit.getRow(view) }}
+        ? (vit: VitreComponent) => {  return { vit, size: vit.getCol(view) }}
+        : (vit: VitreComponent) => {  return { vit, size: vit.getRow(view) }}
 
     const sizes = vits.map(sizeMapper)
 
@@ -203,6 +118,9 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
     const SPANS = this.isRow() ? VITRE_COLUMNS : VITRE_ROWS
 
     sizes.reduce((prev, curr) => {
+      // drawers do not affect the size of the container.
+      if (curr.vit.isDrawer) { return prev }
+
       let total = prev + curr.size
       // Set the index for this view
       newIndex[curr.vit.name] = frames
@@ -222,27 +140,113 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
       }
     }, 0)
 
-    this.vitreNameToFrameIndex = newIndex
-
-    this.swipeManager.setFramesLength(frames)
-
     this.vitreResizer(frames, this.isRow() ? VITRE_COLUMNS : VITRE_ROWS, sizes)
-
-    // Add Drawers
-    const drawerSizes = this.vitreDrawers.map(sizeMapper)
-    // Drawers should be measured as though they are in single frame large
-    this.vitreDrawerResizer(1, this.isRow() ? VITRE_COLUMNS : VITRE_ROWS, drawerSizes)
 
     return true
   }
+}
 
-  vitreResizer = createVitreResizer(true)
-  vitreDrawerResizer = createVitreResizer(true)
+@Component({
+  selector: 'pw-vitre-container',
+  templateUrl: './vitre-container.component.html',
+  encapsulation: ViewEncapsulation.None,
+  styleUrls: [
+    './vitre-container.component.css',
+  ],
+})
+export class VitreContainerComponent implements AfterContentInit, OnChanges, OnDestroy {
+  @ContentChildren(VitreLayerComponent) layers: QueryList<VitreLayerComponent>
+  @HostBinding('attr.vitre-view') get attrView(): ViewType { return this.view }
+  @Input('vitre-direction') direction: 'row' | 'column' = null
+
+  private view: ViewType
+  private $host: JQuery
+  private set isSwiping(swiping: boolean) { this.$host.toggleClass("vitre-swiping", swiping) }
+
+  // <vitre-container [curtainSize]="">
+  // TODO connect manager to listener for these curtains
+  // @Input() curtainSize: number = 200
+
+  private layerManager: VitreLayerManager
+  private layerNameToFrameIndex: { [name: string]: number } = {}
+
+  resizeDebounceInterval = 400
+  resizeDebounce: any
+  onresize = () => {
+    clearTimeout(this.resizeDebounce)
+    this.resizeDebounce =
+    setTimeout(
+      () => this.reset(),
+      this.resizeDebounceInterval
+    )
+  }
+  constructor(private _ref: ElementRef, private _changes: ChangeDetectorRef) {}
+  private setup(orientation: SwipeOrientation) {
+    this.$host = $(this.host())
+    let container = this.host()
+
+    // let layers = Array.from<HTMLElement>(this.host().chil)
+
+    this.layerManager = new VitreLayerManager(
+      orientation,
+      container,
+      this.layers.toArray(),
+      (index) => debug('change index', index)
+    )
+
+    this.layerManager.onSwiping = (swiping) => this.isSwiping = swiping
+
+    window.addEventListener('resize', this.onresize)
+  }
+
+  ngOnChanges(changes) {
+    this.reset()
+  }
+
+  ngAfterContentInit() {
+    // Clear console on destruction
+    // if ('clear' in console) { console.clear() }
+
+    // only once.
+    this.setup(this.isRow() ? SwipeOrientation.ROW : SwipeOrientation.COLUMN)
+
+    this.reset()
+  }
+
+  ngOnDestroy() {
+    // this.swipeManager.destroy()
+    // window.removeEventListener('resize', this.onresize)
+  }
+
+  private reset() {
+    if (this.layerManager == null) { return }
+
+    this.layerManager.resize()
+
+    // resize the view (md, sm, lg, xl)
+    // for this new space size.
+    this.recalcView()
+
+    this.layers.forEach(layer => layer.setView(this.view))
+
+    this._changes.detectChanges()
+  }
+
+  private recalcView() {
+    // when direction is column, we use height
+    // when direction is row, we use width
+    const host = this.$host
+    const size = this.isRow() ? host.width() : host.height()
+
+    const breakpoint = GRID_BREAKPOINTS.find(a => a[1] < size)
+
+    this.view = breakpoint != null ? breakpoint[0] : 'xs'
+  }
 
   goto(name: string): boolean {
-    let index = this.vitreNameToFrameIndex[name]
+    let index = this.layerNameToFrameIndex[name]
     if (index == null) { return false }
-    this.swipeManager.gotoFrame(index)
+    this.layerManager.gotoFrame(index)
     return true
   }
 

@@ -12,9 +12,6 @@ import { VitreSwipeManager, SwipeOrientation } from './vitre-swipe-manager'
 import { VitreComponent } from './vitre/vitre.component'
 export { VitreComponent }
 
-import { VitreDrawerComponent } from './vitre-drawer/vitre-drawer.component'
-export { VitreDrawerComponent }
-
 const VITRE_COLUMNS = 12
 const VITRE_ROWS = 12
 enum DIR { row, column }
@@ -33,18 +30,6 @@ const AMBER_COLORS =
 .map(a => a.split(/\s+/)[1])
 
 const AMBER_COLORS_LEN = AMBER_COLORS.length
-
-// borrowed from _color-map
-const CYAN_COLORS =
-`"200": #80deea
-"300": #4dd0e1
-"400": #26c6da
-"500": #00bcd4
-"600": #00acc1`
-.split(/\n/g)
-.map(a => a.split(/\s+/)[1])
-
-const CYAN_COLORS_LEN = CYAN_COLORS.length
 
 type ViewType = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 // Borrowed from _custom.css
@@ -72,7 +57,6 @@ const GRID_BREAKPOINTS =
 })
 export class VitreContainerComponent implements AfterContentInit, OnChanges, OnDestroy {
   @ContentChildren(VitreComponent) vitres: QueryList<VitreComponent>
-  @ContentChildren(VitreDrawerComponent) vitreDrawers: QueryList<VitreDrawerComponent>
   @HostBinding('attr.vitre-view') get attrView(): ViewType { return this.view }
   @Input('vitre-direction') direction: 'row' | 'column' = null
   @Input('vitre-frame-index') frameIndexAttr: string
@@ -101,18 +85,8 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
   private setup(orientation: SwipeOrientation) {
     this.$host = $(this.host())
     let container = <HTMLElement> this.host()
-    let startDrawers = <HTMLElement[]> Array.from(this.host().children.item(0).children)
-    let content = <HTMLElement> this.host().children.item(1)
-    let endDrawers = <HTMLElement[]> Array.from(this.host().children.item(2).children)
-    this.swipeManager = new VitreSwipeManager(
-      orientation,
-      container,
-      content,
-      startDrawers,
-      endDrawers,
-      (index) => this.onChangeFrameIndex(index),
-      (index) => this.onChangeDrawerIndex(index)
-    )
+    let content = <HTMLElement> this.host().firstElementChild
+    this.swipeManager = new VitreSwipeManager(orientation, container, content, (index) => this.onChangeFrameIndex(index))
 
     this.swipeManager.onSwiping = (swiping) => this.isSwiping = swiping
 
@@ -131,7 +105,6 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
     this.setup(this.isRow() ? SwipeOrientation.ROW : SwipeOrientation.COLUMN)
 
     this.vitres.forEach((v, i) => v.backgroundColor = AMBER_COLORS[i % AMBER_COLORS_LEN])
-    this.vitreDrawers.forEach((v, i) => v.backgroundColor = CYAN_COLORS[i % CYAN_COLORS_LEN])
 
     this.reset()
   }
@@ -145,11 +118,6 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
     this.applyActiveStylesToFrame(index)
   }
 
-  private onChangeDrawerIndex(index: number) {
-    // this.applyActiveStylesToFrame(index)
-    console.log('%conChangeDrawerIndex', 'font-weight: bold;', index)
-  }
-
   private applyActiveStylesToFrame(index: number) {
     this.vitres.forEach(vitre => {
       let isInFrame = this.vitreNameToFrameIndex[vitre.name] === index
@@ -159,7 +127,6 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
 
   private reset() {
     this.vitreResizer = createVitreResizer(this.isRow())
-    this.vitreDrawerResizer = createVitreResizer(this.isRow())
 
     // resize the view (md, sm, lg, xl)
     // for this new space size.
@@ -190,11 +157,11 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
     const vits = this.vitres
     if (vits == null) { return false }
 
-    const sizeMapper = this.isRow()
+    const sizes = vits.map(
+      this.isRow()
         ? vit => {  return { vit, size: vit.getCol(view) }}
         : vit => {  return { vit, size: vit.getRow(view) }}
-
-    const sizes = vits.map(sizeMapper)
+    )
 
     // using these sizes, we can calculate the number of frames we need.
     let frames = 0
@@ -226,18 +193,21 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
 
     this.swipeManager.setFramesLength(frames)
 
-    this.vitreResizer(frames, this.isRow() ? VITRE_COLUMNS : VITRE_ROWS, sizes)
-
-    // Add Drawers
-    const drawerSizes = this.vitreDrawers.map(sizeMapper)
-    // Drawers should be measured as though they are in single frame large
-    this.vitreDrawerResizer(1, this.isRow() ? VITRE_COLUMNS : VITRE_ROWS, drawerSizes)
+    this.resizeVitres(frames, sizes)
 
     return true
   }
 
   vitreResizer = createVitreResizer(true)
-  vitreDrawerResizer = createVitreResizer(true)
+  resizeVitres(
+      frameCount: number,
+      sizes: {
+        vit: VitreComponent;
+        size: number;
+      }[]
+      ) {
+    this.vitreResizer(frameCount, this.isRow() ? VITRE_COLUMNS : VITRE_ROWS, sizes)
+  }
 
   goto(name: string): boolean {
     let index = this.vitreNameToFrameIndex[name]

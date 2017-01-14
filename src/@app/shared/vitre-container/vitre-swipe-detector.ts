@@ -27,46 +27,15 @@ class VitreSwipeDetector {
 
   constructor(
       private host: HTMLElement,
-      private isX: boolean,
-      public curtainWidthPx: number = 100,
-      public curtainWidthRatio: number = .5) {
+      private isX: boolean
+      ) {
     const noop = function(_){}
     this.startSwipe = noop
     this.moveSwipe = noop
     this.endSwipe = noop
 
     this.swipeListener = new SwipeListener(host, isX, this)
-
-    // this.resize()
   }
-
-  // resize() {
-    // if (this.isX) {
-    //   this.offsetLeft = this.host.offsetLeft
-    //   this.offsetWidth = this.host.offsetWidth
-    // } else {
-    //   this.offsetLeft = this.host.offsetTop
-    //   this.offsetWidth = this.host.offsetHeight
-    // }
-
-    // let maxCurtainWidth = Math.max(this.offsetWidth * this.curtainWidthRatio, this.curtainWidthPx)
-    // ensure our curtains are not too big for our width
-    // this.curtainWidth = Math.min(maxCurtainWidth, this.offsetWidth * .5)
-  // }
-
-  // inStartCurtain(ox) {
-  //   let localX = ox - this.offsetLeft
-  //   // console.log({localX})
-  //   return (localX + this.curtainWidth) > this.offsetWidth
-  //       && localX < this.offsetWidth
-  // }
-
-  // inEndCurtain(ox) {
-  //   let localX = ox - this.offsetLeft
-  //   // console.log({localX})
-  //   return 0 < (this.curtainWidth - localX)
-  //       && localX > 0
-  // }
 
   destroy() {
     // TODO unsubscribe from hammer

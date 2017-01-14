@@ -1,5 +1,6 @@
 
 @import 'bootstrap/custom';
+@import 'color-map';
 
 .vitre-lr {
   position: absolute;
@@ -8,4 +9,13 @@
   top: 5vh;
   width: 70vw;
   left: 15vw;
+}
+
+.some-drawer {
+  position: absolute;
+  height: 100%;
+  right: 100%;
+  top: 0;
+  padding: 50vw;
+  background: color-map('cyan', '300');
 }

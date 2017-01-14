@@ -9,6 +9,7 @@
 pw-vitre-container {
   display: block;
   position: relative;
+  touch-action: none;
 
   > .vitre-container-content {
     display: flex;

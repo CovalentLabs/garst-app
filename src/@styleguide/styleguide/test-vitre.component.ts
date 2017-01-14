@@ -21,6 +21,9 @@ const mock = getMockState("Lobby/Base").state
 export class TestVitreComponent implements OnInit, OnDestroy, AfterViewInit {
   // Test vars
   time = 'Now'
+  lockContainer = false
+
+  overscroll: any = null
   vitreView = null
   AppState: AppState = mock
   pod$ = mock.Lobby.Group.GroupUsers.slice(0, 3)

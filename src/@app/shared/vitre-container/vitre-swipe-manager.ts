@@ -6,6 +6,11 @@ export enum SwipeOrientation {
   ROW = 0, COLUMN = 1
 }
 
+export type OverScrollInput
+    = { type: 'overscrollstart', delta: number, direction: SwipeDirection }
+    | { type: 'overscrollmove', delta: number }
+    | { type: 'overscrollend', velocity: number, direction: SwipeDirection }
+
 import { VitreComponent } from './vitre/vitre.component'
 export { VitreComponent }
 
@@ -17,6 +22,7 @@ export class VitreSwipeManager {
   private contentTranslator: ContentTranslator
   // Configurable
   public onSwiping = function (isSwiping: boolean) {}
+  public onOverscroll = function (event: OverScrollInput) {}
 
   // <vitre-container (open)="">
   // @Output() open = new EventEmitter()
@@ -44,6 +50,7 @@ export class VitreSwipeManager {
 
   private delta: number
   private isSwiping = false
+  private reportOverscroll = true
   private static NOOP = function (arg) {}
   private listen() {
     let origin = 0
@@ -55,96 +62,73 @@ export class VitreSwipeManager {
       this.translateFromIndex(this.delta)
     }
     const end = (velocity) => {
-      let width = this.frameWidth
       // set location of container
 
-      // Revert back to using css transition
-      this.content.style.transition = null
+      if (!this.onlyReportLocked) {
+        // Revert back to using css transition
+        this.content.style.transition = null
 
-      // const time = 1000
-      const travel = velocity * 1000
-      const travel300 = velocity * 300
-      if (currentDirection === SwipeDirection.START) {
-        // FORWARD
-        const moveForeGoal = width * -.5
-        // Would it make it to the goal in 300ms?
-        const moveFore = this.delta + travel300 < moveForeGoal
-        if (moveFore) {
-          // See how far this would travel with avg velocity
-          const goalDist = -1 * width - this.delta
-          // Set transitions?
-          let dur = `${calcTransitionDur(goalDist, travel)}s`
-          this.content.style.transitionDuration = dur
-          // console.log("Transdur", dur)
-          setTimeout(() => this.setIndex(this.frameIndex + 1), 0)
-        }
-      } else {
-        // BACKWARD
-        const moveBackGoal = width * .5
-        // Would it make it to the goal in 300ms?
-        const moveBack = this.delta + travel300 > moveBackGoal
-        if (moveBack) {
-          // See how far this would travel with avg velocity
-          const goalDist = this.delta - width
-          // Set transitions based on velocity?
-          let dur = `${calcTransitionDur(goalDist, travel)}s`
-          this.content.style.transitionDuration = dur
-          // console.log("Transdur", dur)
-          setTimeout(() => this.setIndex(this.frameIndex - 1), 0)
-        }
+        this.afterSwipe(velocity)
+
+        this.translateFromIndex()
       }
+
       // console.log("put back", { width, delta: this.delta, index: this.frameIndex })
       // console.log({origin, delta: this.delta })
       this.isSwiping = false
       this.detector.moveSwipe = VitreSwipeManager.NOOP
       this.detector.endSwipe = VitreSwipeManager.NOOP
 
+      if (this.reportOverscroll) this.onOverscroll({ type: "overscrollend", velocity, direction: currentDirection })
 
-      // if (travel > ) {
-      //   console.log("put back")
-      //   panes.style.transform = `translateX(0px)`
-      //   handlerRight = handleRight
-      // } else {
-      //   console.log("open")
-      //   panes.style.transform = `translateX(-${w}px)`
-      //   handlerRight = handleLeft
-      // }
-      this.translateFromIndex()
     }
 
     this.detector.startSwipe = (input) => {
       origin = input.origin
       currentDirection = input.direction
-      if (currentDirection === SwipeDirection.START) {
+      this.reportOverscroll = false
+
+      this.isSwiping = true
+
+      if (this.onlyReportLocked) {
+        this.setTranslateBounds(false, false)
+        this.reportOverscroll = true
+        this.reportOverscroll = true
+
+      } else if (currentDirection === SwipeDirection.START) {
         if (this.canGoForward()) {
           this.setTranslateBounds(true, false)
-          this.isSwiping = true
+          this.reportOverscroll = false
+
         } else {
-          this.isSwiping = false
+          this.setTranslateBounds(false, false)
+          this.reportOverscroll = true
+          this.onOverscroll({ type: "overscrollstart", delta: input.delta, direction: input.direction })
+
         }
 
       } else if (currentDirection === SwipeDirection.END) {
         if (this.canGoBackward()) {
           this.setTranslateBounds(false, true)
-          this.isSwiping = true
+          this.reportOverscroll = false
+
         } else {
-          this.isSwiping = false
+          this.setTranslateBounds(false, false)
+          this.reportOverscroll = true
+          this.onOverscroll({ type: "overscrollstart", delta: input.delta, direction: input.direction })
+
         }
       }
-      if (this.isSwiping) {
-        // trigger our events on move and on end
-        this.detector.moveSwipe = move
-        this.detector.endSwipe = end
 
-        this.content.style.transition = 'none'
-        this.onSwiping(true)
+      // trigger our events on move and on end
+      this.detector.moveSwipe = move
+      this.detector.endSwipe = end
 
-        move(input.delta)
+      this.content.style.transition = 'none'
+      this.onSwiping(true)
 
-      } else {
-        this.detector.moveSwipe = VitreSwipeManager.NOOP
-        this.detector.endSwipe = VitreSwipeManager.NOOP
-      }
+      move(input.delta)
+
     }
     this.detector.moveSwipe = VitreSwipeManager.NOOP
     this.detector.endSwipe = VitreSwipeManager.NOOP
@@ -173,6 +157,21 @@ export class VitreSwipeManager {
     this.detector.destroy()
   }
 
+  private onlyReportLocked: boolean = false
+  /**
+   * Locks this container to only report overscrolls,
+   * this way we can continue using the overscroll information
+   * above the container itself!
+   */
+  public lock(lock?: boolean) {
+    if (lock != null) this.onlyReportLocked = lock
+    else this.onlyReportLocked = true
+  }
+
+  public unlock() {
+    this.onlyReportLocked = false
+  }
+
   // which frame are we currently viewing
   private setSize(frameWidth: number) {
     let framesLength = this.framesLength
@@ -188,6 +187,42 @@ export class VitreSwipeManager {
   private translateZero: number = 0
   private translateMin: number
   private translateMax: number
+
+  private afterSwipe(velocity: number) {
+    const width = this.frameWidth
+    // const time = 1000
+    const travel = velocity * 1000
+    const travel300 = velocity * 300
+    if (this.delta <= 0) {
+      // FORWARD
+      const moveForeGoal = width * -.5
+      // Would it make it to the goal in 300ms?
+      const moveFore = this.delta + travel300 < moveForeGoal
+      if (moveFore) {
+        // See how far this would travel with avg velocity
+        const goalDist = -1 * width - this.delta
+        // Set transitions?
+        let dur = `${calcTransitionDur(goalDist, travel)}s`
+        this.content.style.transitionDuration = dur
+        // console.log("Transdur", dur)
+        this.setIndex(this.frameIndex + 1)
+      }
+    } else {
+      // BACKWARD
+      const moveBackGoal = width * .5
+      // Would it make it to the goal in 300ms?
+      const moveBack = this.delta + travel300 > moveBackGoal
+      if (moveBack) {
+        // See how far this would travel with avg velocity
+        const goalDist = this.delta - width
+        // Set transitions based on velocity?
+        let dur = `${calcTransitionDur(goalDist, travel)}s`
+        this.content.style.transitionDuration = dur
+        // console.log("Transdur", dur)
+        this.setIndex(this.frameIndex - 1)
+      }
+    }
+  }
 
   // recalibrate's min and max
   private setIndex(frameIndex: number = this.frameIndex) {
@@ -212,8 +247,6 @@ export class VitreSwipeManager {
 
     this.frameIndex = frameIndex
 
-    this.setTranslateBounds(this.canGoForward(), this.canGoBackward())
-
     this.onChangeIndex(this.frameIndex)
 
     // set location of container
@@ -233,6 +266,7 @@ export class VitreSwipeManager {
 
   private setTranslateBounds(canSwipeForward: boolean, canSwipeBackward: boolean) {
     // Set translateMin and translateMax
+    // as well as set whether we are reporting overscrolls
 
     // set max to frame width
     if (canSwipeBackward) this.translateMax = this.frameWidth
@@ -245,8 +279,13 @@ export class VitreSwipeManager {
 
   private translateFromIndex(delta: number = 0) {
     // set location of container
-    if (delta > this.translateMax) delta = this.translateMax
-    else if (delta < this.translateMin) delta = this.translateMin
+    if (delta > this.translateMax) {
+      if (this.reportOverscroll) this.onOverscroll({ type: 'overscrollmove', delta })
+      delta = this.translateMax
+    } else if (delta < this.translateMin) {
+      if (this.reportOverscroll) this.onOverscroll({ type: 'overscrollmove', delta })
+      delta = this.translateMin
+    }
 
     this.contentTranslator.translate(this.translateZero + delta)
   }
@@ -281,7 +320,8 @@ class ContentTranslator {
     this.lastKnownDist = dist
     if (!this.ticking) {
       this.ticking = true
-      requestAnimationFrame(this.update)
+      // requestAnimationFrame(this.update)
+      this.update()
     }
   }
 

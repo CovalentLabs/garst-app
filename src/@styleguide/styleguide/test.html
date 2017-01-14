@@ -7,9 +7,7 @@
   <pw-vitre
       vitre-name="group"
       vitre-col="12"
-      vitre-col-sm="4"
-      vitre-row="12"
-      vitre-row-sm="4"
+      vitre-col-sm="5"
       >
     <div class="window h-100
           d-flex flex-column align-content-stretch">
@@ -39,7 +37,8 @@
           </pw-pod-stack>
         </div>
       </div>
-      <div class="container-fluid m-0">
+      <!-- bs-width can be applied to any bootstrap .container to override the breakpoints based on the container's width -->
+      <div class="container-fluid no-gutters" bs-width>
         <div class="row info-blocks ib-mini">
           <div class="ib-activity col-6 col-sm-3" (tap)="vit.goto('group')">Lunch</div>
           <div class="ib-time col-6 col-sm-3" (tap)="vit.goto('group')">11:15am <md-icon>mode_edit</md-icon></div>
@@ -52,14 +51,12 @@
   <pw-vitre
       vitre-name="chat"
       vitre-col="12"
-      vitre-col-sm="8"
-      vitre-row="12"
-      vitre-row-sm="8"
+      vitre-col-sm="7"
       >
     <div class="window h-100
           d-flex flex-column align-content-stretch">
       <div class="test-elt"></div>
-      <div class="container-fluid m-0">
+      <div class="container-fluid no-gutters" bs-width>
         <div class="row info-blocks">
           <div class="ib-activity col-6 col-sm-3">Lunch</div>
           <div class="ib-time col-6 col-sm-3" (tap)="vit.goto('group')">11:15am <md-icon>mode_edit</md-icon></div>
@@ -71,7 +68,6 @@
           <pw-profile-message
               *ngFor="let gu of AppState.Lobby.Group.GroupUsers"
               [profile]="gu.Profile"
-              [action]="gu.Profile.Tagline"
               [messageText]="gu.Profile.Tagline"
               [time]="time"
               >

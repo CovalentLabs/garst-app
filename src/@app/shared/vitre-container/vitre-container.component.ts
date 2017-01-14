@@ -1,10 +1,11 @@
 /* tslint:disable:member-ordering */
 import {
-  Component,
+  Component, EventEmitter,
   AfterContentInit, OnChanges, OnDestroy,
   ElementRef, HostBinding,
+  ContentChild,
   ChangeDetectorRef,
-  Input, ContentChildren, QueryList, ViewEncapsulation
+  Input, Output, ContentChildren, QueryList, ViewEncapsulation
 } from '@angular/core'
 
 import { VitreSwipeManager, SwipeOrientation } from './vitre-swipe-manager'
@@ -12,40 +13,15 @@ import { VitreSwipeManager, SwipeOrientation } from './vitre-swipe-manager'
 import { VitreComponent } from './vitre/vitre.component'
 export { VitreComponent }
 
-const VITRE_COLUMNS = 12
-const VITRE_ROWS = 12
 enum DIR { row, column }
-const AMBER_COLORS =
-`50 #FFF8E1
-100 #FFECB3
-200 #FFE082
-300 #FFD54F
-400 #FFCA28
-500 #FFC107
-600 #FFB300
-700 #FFA000
-800 #FF8F00
-900 #FF6F00`
-.split(/\n/g)
-.map(a => a.split(/\s+/)[1])
 
-const AMBER_COLORS_LEN = AMBER_COLORS.length
+import {
+  AMBER_COLORS, AMBER_COLORS_LEN,
+  GRID_BREAKPOINTS,
+  VITRE_COLUMNS, VITRE_ROWS
+} from './constants'
 
 type ViewType = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-// Borrowed from _custom.css
-const GRID_BREAKPOINTS =
-`  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px`
-.replace(/\s+/g, '')
-.split(',')
-.map(function (b): [ViewType, number] {
-  let [name, px] = b.split(':')
-  return [<ViewType> name, parseFloat(px)]
-})
-.reverse()
 
 @Component({
   selector: 'pw-vitre-container',
@@ -60,14 +36,19 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
   @HostBinding('attr.vitre-view') get attrView(): ViewType { return this.view }
   @Input('vitre-direction') direction: 'row' | 'column' = null
   @Input('vitre-frame-index') frameIndexAttr: string
+  @Output('overscroll') overscollEmitter = new EventEmitter<any>()
+
+  @Input() set lock(lock: boolean) {
+    if (this.swipeManager != null) { this.swipeManager.lock(lock) }
+    this._lock = lock
+  }
+  private _lock: boolean = false
 
   private view: ViewType;
   private $host: JQuery
-  private set isSwiping(swiping: boolean) { this.$host.toggleClass("vitre-swiping", swiping) }
-
-  // <vitre-container [curtainSize]="">
-  // TODO connect manager to listener for these curtains
-  @Input() curtainSize: number = 200
+  private set isSwiping(swiping: boolean) {
+    this.$host.toggleClass("vitre-swiping", swiping)
+  }
   private swipeManager: VitreSwipeManager
   private vitreNameToFrameIndex: { [name: string]: number } = {}
 
@@ -89,6 +70,9 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
     this.swipeManager = new VitreSwipeManager(orientation, container, content, (index) => this.onChangeFrameIndex(index))
 
     this.swipeManager.onSwiping = (swiping) => this.isSwiping = swiping
+    this.swipeManager.onOverscroll = (event) => this.overscollEmitter.emit(event)
+
+    this.swipeManager.lock(this._lock)
 
     window.addEventListener('resize', this.onresize)
   }

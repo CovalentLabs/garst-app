@@ -88,7 +88,7 @@ export class VitreContainerComponent implements AfterContentInit, OnChanges, OnD
     // only once.
     this.setup(this.isRow() ? SwipeOrientation.ROW : SwipeOrientation.COLUMN)
 
-    this.vitres.forEach((v, i) => v.backgroundColor = AMBER_COLORS[i % AMBER_COLORS_LEN])
+    // this.vitres.forEach((v, i) => v.backgroundColor = AMBER_COLORS[i % AMBER_COLORS_LEN])
 
     this.reset()
   }

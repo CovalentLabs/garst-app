@@ -6,13 +6,13 @@
   [class.btn-warning]="vitreView == v"
   (click)="vitreView = v">{{ v || 'null' }}</div>
 
-<code>{{ overscoll | json }}</code>
+<code>{{ overscroll | json }}</code>
 
 <pw-vitre-container class="vitre-lr"
     vitre-direction="row"
     vitre-frame-index="0"
     [attr.vitre-view]="vitreView"
-    (overscroll)="overscoll = $event"
+    (overscroll)="overscroll = $event"
     [lock]="lockContainer"
     >
   <div class="some-drawer">

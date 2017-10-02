@@ -1,5 +1,18 @@
 # Garst app
 
+## Problem
+
+This application
+
+## Architecture
+
+The architecture of this application is heavily influenced by the work of Elm (Model, View, Update) and React with Redux.
+What are called messages or commands in Elm, and actions in Redux, are called actions in this repository [example: `@app/core/action/lobby.action.ts`](./src/%40app/core/action/lobby.action.ts). The primary difference and deviation, is that Redux dispatchers cannot be typed, so this architecture is somewhat similar to the [redux-thunk middleware](https://github.com/gaearon/redux-thunk) as we call to get an updater, and then we use that `update` function to pass updates to an [application state partial](./src/%40app/core/model/index.ts#L21-L43).
+
+For more information on the architecture, view the [2017-01-02 Progress Report Developer Tools document](./progress-reports/2017-01-02%20Project-W%20Progress%20Report%201/Project-W%20Progress%20Report%201%20-%20Developer%20Tools.pdf) which goes into more detail on how debugging and troubleshooting works in an event sourced way.
+
+## Repo origins
+
 This is a new repository for Project-W to live in, as the previous repo was unequipped to use Ahead-of-Time compilation.
 
 In addition, the dependencies that we were using, have been becoming out of date.

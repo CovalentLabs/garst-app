@@ -1,8 +1,11 @@
 # Garst app
 
-## Problem
+This app, created with help from many on the Covalent team, intends to help students form groups to eat lunch or dinner with at the on-campus Garst Dining Hall. The app and ideas are designed with the intention to grow into a more comprehensive activity matching experience. Maybe we can help people find groups to play Frisbee, Soccer, or some Settlers of Catan.
 
-This application
+_This is one of the first designs I created for the app's lobby and grouping screens._
+<center>
+  <img type="image/png" src="./designs/2017-01/i2-purple-01-06.png">
+</center>
 
 ## Architecture
 
